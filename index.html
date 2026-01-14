@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lavate Media | Built to elevate</title>
+    <title>Lavate Media | Built to Elevate</title>
     <meta name="description" content="Lavate Media is a professional creative and digital media brand representing growth, structure, and confidence.">
+    <meta name="theme-color" content="#0A090C">
+    
+    <!-- Open Graph / SEO -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Lavate Media">
+    <meta property="og:description" content="Professional creative and digital media brand.">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://lavatemedia.in/assets/lavate-logo.png">
@@ -50,6 +56,7 @@
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite',
                     },
                     keyframes: {
                         float: {
@@ -64,13 +71,25 @@
 
     <style>
         /* Base Styles */
+        :root {
+            --cursor-size: 8px;
+            --cursor-outline-size: 40px;
+        }
+
         body {
             background-color: #F8F8FA;
             color: #0A090C;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            /* Only hide cursor on desktop to prevent mobile issues */
-            @media (min-width: 768px) {
+            width: 100%;
+        }
+
+        /* Hide Default Cursor only on Desktop */
+        @media (min-width: 1024px) {
+            body {
+                cursor: none;
+            }
+            a, button, input, textarea, .cursor-pointer {
                 cursor: none;
             }
         }
@@ -79,56 +98,69 @@
             font-family: 'Cinzel', serif;
         }
 
-        /* Custom Cursor */
+        /* Optimized Custom Cursor */
         .cursor-dot,
         .cursor-outline {
             position: fixed;
             top: 0;
             left: 0;
-            transform: translate(-50%, -50%);
             border-radius: 50%;
             z-index: 9999;
-            pointer-events: none;
+            pointer-events: none; /* Crucial: Allows clicking through */
+            transform: translate(-50%, -50%);
             display: none;
+            will-change: transform;
         }
-        @media (min-width: 768px) {
+
+        @media (min-width: 1024px) {
             .cursor-dot, .cursor-outline {
                 display: block;
             }
         }
         
         .cursor-dot {
-            width: 8px;
-            height: 8px;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
             background-color: #E7A349;
         }
+
         .cursor-outline {
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(10, 9, 12, 0.5);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            width: var(--cursor-outline-size);
+            height: var(--cursor-outline-size);
+            border: 1px solid rgba(10, 9, 12, 0.3);
+            transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
         }
         
-        /* Hover State for Cursor */
-        body:hover .cursor-outline {
+        /* Hover States for Cursor */
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
             border-color: #E7A349;
-        }
-        a:hover ~ .cursor-outline, button:hover ~ .cursor-outline {
-            transform: scale(1.5);
-            background-color: rgba(231, 163, 73, 0.1);
+            background-color: rgba(231, 163, 73, 0.05);
+            backdrop-filter: blur(2px);
         }
 
-        /* Scrollbar */
+        body.hovering .cursor-dot {
+            opacity: 0;
+        }
+
+        /* Cross-Browser Scrollbar */
+        /* Firefox */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #E7A349 #0A090C;
+        }
+        
+        /* Webkit */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #0A090C;
         }
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(to bottom, #E7A349, #C36F86);
-            border-radius: 5px;
-            border: 2px solid #0A090C;
+            border-radius: 4px;
         }
 
         /* Utilities */
@@ -138,42 +170,46 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* Sticky Section logic */
-        .sticky-wrapper {
-            position: sticky;
-            top: 120px;
+        .glass-nav {
+            background: rgba(10, 9, 12, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Seamless Infinite Marquee - Fixed & Optimized */
+        /* Seamless Infinite Marquee */
         .marquee-wrapper {
             position: relative;
             overflow: hidden;
             width: 100%;
             display: flex;
-            mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+            user-select: none;
+            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
             padding: 20px 0;
         }
 
         .marquee-track {
             display: flex;
             align-items: center;
-            width: max-content; /* Critical for seamless loop */
-            gap: 40px; /* Base gap */
-            animation: scroll 20s linear infinite; /* Faster desktop speed */
-            will-change: transform; /* Hardware Acceleration */
-            transform: translate3d(0, 0, 0); /* Force GPU */
+            width: max-content;
+            gap: 40px; 
+            animation: scroll 15s linear infinite;
+            will-change: transform;
+        }
+
+        .marquee-wrapper:hover .marquee-track {
+            animation-play-state: paused;
         }
 
         /* Responsive Animation & Spacing */
         @media (max-width: 768px) {
             .marquee-track {
-                animation-duration: 8s; /* Extra fast on mobile */
+                animation-duration: 6s; 
                 gap: 30px;
             }
             .brand-logo {
-                height: 50px !important;
-                margin: 0 !important;
+                height: 40px !important;
             }
         }
 
@@ -185,7 +221,7 @@
 
         @keyframes scroll {
             0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); } /* Moves exactly half (one full set) */
+            100% { transform: translate3d(-50%, 0, 0); } 
         }
 
         .brand-item {
@@ -193,22 +229,27 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            opacity: 0.8;
+            opacity: 0.6;
             transition: all 0.3s ease;
             cursor: pointer;
         }
+        
         .brand-item:hover {
             opacity: 1;
-            transform: scale(1.05);
+            transform: scale(1.1);
+            filter: grayscale(0%);
         }
 
         .brand-logo {
-            height: 70px;
+            height: 60px;
             width: auto;
             object-fit: contain;
-            /* Enhance visibility against background */
-            mix-blend-mode: multiply; 
-            filter: contrast(1.05); 
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+        
+        .brand-item:hover .brand-logo {
+            filter: grayscale(0%);
         }
 
         /* Pixel Preloader Canvas */
@@ -220,27 +261,38 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease-out, visibility 0.5s;
+            transition: opacity 0.6s ease-out, visibility 0.6s;
         }
+        
         .loader-line {
             width: 200px;
-            height: 2px;
-            background: #222;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
             position: relative;
             overflow: hidden;
         }
+        
         .loader-line::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; height: 100%; width: 50%;
+            top: 0; left: 0; height: 100%; width: 40%;
             background: #E7A349;
-            animation: load 2s ease-in-out infinite;
-        }
-        @keyframes load {
-            0% { left: -50%; }
-            100% { left: 100%; }
+            animation: load 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px #E7A349;
         }
         
+        @keyframes load {
+            0% { left: -40%; }
+            50% { left: 40%; width: 60%; }
+            100% { left: 100%; width: 40%; }
+        }
+        
+        /* Tilt Card Effect */
+        .tilt-card-element {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
         /* Floating WhatsApp */
         .whatsapp-float {
             position: fixed;
@@ -254,23 +306,24 @@
             height: 60px;
             text-align: center;
             font-size: 30px;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
         .whatsapp-float:hover {
-            transform: scale(1.1);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4);
         }
     </style>
 </head>
 <body class="antialiased selection:bg-lavate-gold selection:text-black">
 
-    <!-- Creative Pixel Preloader -->
+    <!-- Preloader -->
     <div id="preloader">
-        <div class="text-center">
-            <h1 class="text-lavate-gold font-cinzel text-2xl tracking-[0.5em] mb-4">LAVATE</h1>
+        <div class="text-center relative">
+            <h1 class="text-white font-cinzel text-3xl tracking-[0.5em] mb-6 animate-pulse">LAVATE</h1>
             <div class="loader-line mx-auto"></div>
         </div>
     </div>
@@ -280,41 +333,56 @@
     <div class="cursor-outline" id="cursor-outline"></div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 transition-all duration-300 bg-lavate-black/95 backdrop-blur-md border-b border-white/5" id="navbar">
+    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-transparent" id="navbar">
         <div class="max-w-[1600px] mx-auto px-6 lg:px-12">
             <div class="flex justify-between items-center h-24">
                 
                 <!-- Logo -->
-                <a href="#" class="flex-shrink-0 z-50 group">
-                    <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media" class="h-12 w-auto object-contain transition-transform group-hover:scale-105"> 
+                <a href="#" class="flex-shrink-0 z-50 group relative hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media Logo" width="120" height="48" class="h-12 w-auto object-contain transition-transform group-hover:scale-105"> 
                 </a>
 
                 <!-- Desktop Menu -->
-                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
-                    <a href="#about" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-gold transition-colors py-2">About</a>
-                    <a href="#services" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-rose transition-colors py-2">Services</a>
-                    <a href="#work" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-blue transition-colors py-2">Work</a>
-                    <a href="#reviews" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2">Reviews</a>
-                    <a href="#faq" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2">FAQ</a>
+                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+                    <a href="#about" class="hover-trigger text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-gold transition-colors py-2 relative group">
+                        About
+                        <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-lavate-gold transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#services" class="hover-trigger text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-rose transition-colors py-2 relative group">
+                        Services
+                        <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-lavate-rose transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#work" class="hover-trigger text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-blue transition-colors py-2 relative group">
+                        Work
+                        <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-lavate-blue transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#reviews" class="hover-trigger text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2 relative group">
+                        Reviews
+                        <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#faq" class="hover-trigger text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2 relative group">
+                        FAQ
+                        <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
+                    </a>
                 </div>
 
                 <!-- Right Action -->
-                <div class="hidden lg:flex items-center gap-6">
-                    <a href="tel:+917022776211" class="text-white hover:text-lavate-gold text-xs font-bold tracking-widest transition-colors">
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="tel:+917022776211" class="hover-trigger text-white hover:text-lavate-gold text-[11px] font-bold tracking-widest transition-colors">
                         +91 70227 76211
                     </a>
-                    <a href="#contact" class="group relative px-6 py-2 bg-white text-lavate-black overflow-hidden font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">
-                         <div class="absolute inset-0 w-0 bg-lavate-gold transition-all duration-[250ms] ease-out group-hover:w-full z-0"></div>
+                    <a href="#contact" class="hover-trigger group relative px-7 py-3 bg-white text-lavate-black overflow-hidden font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors">
+                         <div class="absolute inset-0 w-0 bg-lavate-gold transition-all duration-[400ms] ease-out group-hover:w-full z-0"></div>
                          <span class="relative z-10">Start Project</span>
                     </a>
                 </div>
 
                 <!-- Mobile Hamburger & Contact -->
-                <div class="lg:hidden flex items-center gap-4">
-                     <a href="tel:+917022776211" class="text-white text-xs font-bold tracking-widest">
+                <div class="lg:hidden flex items-center gap-5">
+                     <a href="tel:+917022776211" class="text-white text-sm font-bold tracking-widest" aria-label="Call Us">
                         <i class="fas fa-phone-alt"></i>
                     </a>
-                    <button id="menu-toggle" class="z-50 p-2 text-white focus:outline-none">
+                    <button id="menu-toggle" class="z-50 p-2 text-white focus:outline-none hover:text-lavate-gold transition-colors" aria-label="Toggle Menu">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -324,154 +392,122 @@
 
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 z-40 bg-lavate-black transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col justify-center items-center">
-        <button id="menu-close" class="absolute top-8 right-8 text-white text-3xl focus:outline-none">
+        <button id="menu-close" class="absolute top-8 right-8 text-white text-3xl focus:outline-none hover:text-lavate-rose transition-colors" aria-label="Close Menu">
             <i class="fas fa-times"></i>
         </button>
         <div class="flex flex-col space-y-8 text-center">
-            <a href="#about" class="text-3xl font-cinzel text-white hover:text-lavate-gold mobile-link">About</a>
-            <a href="#services" class="text-3xl font-cinzel text-white hover:text-lavate-rose mobile-link">Services</a>
-            <a href="#work" class="text-3xl font-cinzel text-white hover:text-lavate-blue mobile-link">Work</a>
-            <a href="#reviews" class="text-3xl font-cinzel text-white hover:text-lavate-gold mobile-link">Reviews</a>
-            <a href="#contact" class="text-3xl font-cinzel text-lavate-gold mobile-link">Contact</a>
+            <a href="#about" class="text-3xl font-cinzel text-white hover:text-lavate-gold mobile-link transition-colors">About</a>
+            <a href="#services" class="text-3xl font-cinzel text-white hover:text-lavate-rose mobile-link transition-colors">Services</a>
+            <a href="#work" class="text-3xl font-cinzel text-white hover:text-lavate-blue mobile-link transition-colors">Work</a>
+            <a href="#reviews" class="text-3xl font-cinzel text-white hover:text-lavate-gold mobile-link transition-colors">Reviews</a>
+            <a href="#contact" class="text-3xl font-cinzel text-lavate-gold mobile-link transition-colors">Contact</a>
             <a href="tel:+917022776211" class="text-xl font-inter text-white mt-8 border-t border-white/20 pt-8">+91 70227 76211</a>
         </div>
     </div>
 
     <!-- Floating WhatsApp -->
-    <a href="https://wa.me/917022776211" target="_blank" class="whatsapp-float">
+    <a href="https://wa.me/917022776211" target="_blank" class="whatsapp-float hover-trigger" aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Hero Section (Video Background) -->
+    <!-- Hero Section -->
     <header class="relative min-h-screen flex items-center justify-center pt-20 bg-lavate-black overflow-hidden">
         <!-- Background Video -->
-        <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" class="absolute inset-0 w-full h-full object-cover z-0 opacity-60">
+        <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50">
             <source src="https://lavatemedia.in/assets/lavate-herobgvid.mp4" type="video/mp4">
         </video>
-        <!-- Dark Overlay for readability -->
-        <div class="absolute inset-0 bg-black/50 z-10"></div>
+        
+        <!-- Overlays -->
+        <div class="absolute inset-0 bg-black/40 z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-lavate-black via-transparent to-lavate-black/80 z-10"></div>
         
         <div class="max-w-[1600px] mx-auto px-6 lg:px-12 relative z-20 text-center">
             
-            <div class="inline-block mb-6 px-4 py-2 border border-white/10 rounded-full bg-white/5 backdrop-blur-sm" data-aos="fade-down">
+            <div class="inline-block mb-8 px-4 py-2 border border-white/10 rounded-full bg-white/5 backdrop-blur-sm" data-aos="fade-down">
                 <span class="text-[10px] md:text-xs font-bold tracking-[0.3em] text-lavate-gold uppercase">Built to Elevate</span>
             </div>
             
             <h1 class="text-5xl md:text-7xl lg:text-9xl font-cinzel text-white mb-8 tracking-tight leading-none drop-shadow-2xl" data-aos="zoom-in" data-aos-duration="1000">
                 LAVATE <br> 
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-lavate-gold via-lavate-rose to-lavate-blue">MEDIA</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-lavate-gold via-lavate-rose to-lavate-blue relative">
+                    MEDIA
+                    <!-- Glint effect -->
+                    <span class="absolute top-0 left-0 w-full h-full bg-white/10 blur-xl opacity-0 animate-pulse"></span>
+                </span>
             </h1>
             
-            <p class="text-gray-200 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed drop-shadow-md" data-aos="fade-up" data-aos-delay="200">
+            <p class="text-gray-200 text-lg md:text-xl font-light max-w-2xl mx-auto mb-14 leading-relaxed drop-shadow-md" data-aos="fade-up" data-aos-delay="200">
                 A professional creative brand representing <span class="text-white font-medium">growth</span>, <span class="text-white font-medium">structure</span>, and <span class="text-white font-medium">confidence</span>.
             </p>
 
             <div class="flex flex-col md:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="400">
-                <a href="#services" class="px-10 py-4 bg-brand-gradient text-white font-bold uppercase tracking-widest text-xs hover:shadow-glow-gold transition-all hover:scale-105 border border-transparent">
+                <a href="#services" class="hover-trigger px-10 py-4 bg-brand-gradient text-white font-bold uppercase tracking-widest text-xs hover:shadow-lg hover:shadow-lavate-gold/20 transition-all hover:-translate-y-1 border border-transparent rounded-sm">
                     Explore Capabilities
                 </a>
-                <a href="#work" class="px-10 py-4 border border-white/40 bg-black/20 backdrop-blur-sm text-white font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all">
+                <a href="#work" class="hover-trigger px-10 py-4 border border-white/30 bg-black/20 backdrop-blur-sm text-white font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all hover:-translate-y-1 rounded-sm">
                     View Portfolio
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Trusted By (Marquee with Seamless Infinite Loop) -->
+    <!-- Trusted By (Marquee) -->
     <div class="py-16 bg-white border-b border-gray-100 relative z-30 overflow-hidden">
-        <p class="text-center text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-10">Trusted by Industry Leaders</p>
+        <p class="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-12">Trusted by Industry Leaders</p>
         
         <div class="marquee-wrapper">
             <div class="marquee-track">
-                <!-- SET 1 (Combined Old + New) -->
-                <!-- OLD LOGOS -->
-                <div class="brand-item">
-                    <img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo">
+                <!-- LOGO SET 1 -->
+                <div class="brand-item hover-trigger">
+                    <img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/07267PU20YR_BFA.jpeg" alt="Brand" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/069309P6V1WBCVN.jpeg" alt="Brand" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/06586IAOYAFKZ7R.jpeg" alt="Brand" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/04934KP3ZE5W_VC.jpeg" alt="Brand" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/062452NY98K4JCW.jpeg" alt="Brand" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-
-                <!-- NEW LOGOS -->
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo">
+                
+                <!-- DUPLICATE SET 1 -->
+                <div class="brand-item hover-trigger">
+                    <img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-
-                <!-- SET 2 (Duplicate for Infinite Loop) -->
-                <!-- OLD LOGOS -->
-                <div class="brand-item">
-                    <img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/07267PU20YR_BFA.jpeg" alt="Brand" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/069309P6V1WBCVN.jpeg" alt="Brand" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/06586IAOYAFKZ7R.jpeg" alt="Brand" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/04934KP3ZE5W_VC.jpeg" alt="Brand" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://html-generator.com/uploads/images/2025/08/29/062452NY98K4JCW.jpeg" alt="Brand" class="brand-logo">
-                </div>
-
-                <!-- NEW LOGOS -->
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo">
-                </div>
-                <div class="brand-item">
-                    <img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo">
+                <div class="brand-item hover-trigger">
+                    <img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo" width="100" height="60" loading="lazy">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- About / Introduction Section (Creative & Responsive Update) -->
+    <!-- About Section -->
     <section id="about" class="py-24 lg:py-32 bg-lavate-light px-6 lg:px-12 relative overflow-hidden">
-        <!-- Background Elements -->
         <div class="absolute top-0 right-0 w-1/2 h-full bg-white skew-x-12 opacity-50 pointer-events-none"></div>
         
         <div class="max-w-[1400px] mx-auto relative z-10">
@@ -506,24 +542,21 @@
                         <div>
                             <h4 class="text-3xl md:text-4xl font-cinzel text-lavate-black mb-1">1000+</h4>
                             <p class="text-[10px] md:text-xs uppercase tracking-widest text-gray-400 font-bold">Projects</p>
-                        </div>
-                         <div>
+                        </div> 
+                        <div>
                             <h4 class="text-3xl md:text-4xl font-cinzel text-lavate-black mb-1">24/7</h4>
                             <p class="text-[10px] md:text-xs uppercase tracking-widest text-gray-400 font-bold">Support</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Image Column - Creative & Responsive -->
+                <!-- Image Column -->
                 <div class="lg:col-span-5 order-1 lg:order-2 relative" data-aos="fade-left">
-                    <!-- Decorative Border -->
                     <div class="absolute top-4 -right-4 w-full h-full border-2 border-lavate-gold/30 rounded-sm hidden md:block"></div>
                     
-                    <!-- Main Image Container - Square on mobile, tall on desktop -->
                     <div class="relative aspect-square lg:aspect-[4/5] w-full overflow-hidden rounded-sm shadow-2xl group">
-                        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" alt="Team Strategy" class="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" alt="Strategic Planning Team" class="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-110" loading="lazy">
                         
-                        <!-- Floating Card -->
                         <div class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm p-6 border-l-4 border-lavate-gold shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
                             <p class="font-cinzel text-lg text-lavate-black mb-1">Strategic Planning</p>
                             <p class="text-xs text-gray-500 uppercase tracking-widest">Our core methodology</p>
@@ -535,7 +568,7 @@
         </div>
     </section>
 
-    <!-- Detailed Services Section -->
+    <!-- Services Section -->
     <section id="services" class="py-32 bg-white relative">
         <div class="max-w-[1600px] mx-auto px-6 lg:px-12">
             <div class="text-center mb-20">
@@ -545,7 +578,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Service 1 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="0">
+                <div class="hover-trigger group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden rounded-sm" data-aos="fade-up" data-aos-delay="0">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-lavate-gold/10 rounded-bl-full group-hover:bg-lavate-gold/20 transition-colors"></div>
                     
                     <i class="fas fa-layer-group text-4xl text-lavate-gold mb-8 group-hover:scale-110 transition-transform duration-300"></i>
@@ -568,7 +601,7 @@
                 </div>
 
                 <!-- Service 2 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="hover-trigger group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden rounded-sm" data-aos="fade-up" data-aos-delay="100">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-lavate-rose/10 rounded-bl-full group-hover:bg-lavate-rose/20 transition-colors"></div>
                     
                     <i class="fas fa-video text-4xl text-lavate-rose mb-8 group-hover:scale-110 transition-transform duration-300"></i>
@@ -591,7 +624,7 @@
                 </div>
 
                 <!-- Service 3 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                <div class="hover-trigger group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden rounded-sm" data-aos="fade-up" data-aos-delay="200">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-lavate-blue/10 rounded-bl-full group-hover:bg-lavate-blue/20 transition-colors"></div>
                     
                     <i class="fas fa-globe text-4xl text-lavate-blue mb-8 group-hover:scale-110 transition-transform duration-300"></i>
@@ -614,7 +647,7 @@
                 </div>
 
                 <!-- Service 4 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                <div class="hover-trigger group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden rounded-sm" data-aos="fade-up" data-aos-delay="300">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-white rounded-bl-full group-hover:bg-gray-800 transition-colors"></div>
                     
                     <i class="fas fa-chart-line text-4xl text-lavate-black mb-8 group-hover:text-white group-hover:scale-110 transition-transform duration-300"></i>
@@ -639,21 +672,21 @@
         </div>
     </section>
 
-    <!-- Compact Portfolio Section -->
+    <!-- Work Section -->
     <section id="work" class="py-24 bg-lavate-black text-white px-6 lg:px-12">
         <div class="max-w-[1600px] mx-auto">
             <div class="flex justify-between items-center mb-16 border-b border-white/10 pb-6">
                 <h2 class="text-3xl md:text-4xl font-cinzel">Selected Works</h2>
-                <a href="#" class="hidden md:inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                <a href="#" class="hover-trigger hidden md:inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
                     View Full Portfolio
                 </a>
             </div>
 
-            <!-- Compact Creative Grid -->
+            <!-- Portfolio Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Project 1 -->
-                <div class="group relative overflow-hidden rounded-sm cursor-pointer" data-aos="fade-up">
-                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Apex Finance" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Apex Financial Branding" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100" loading="lazy">
                     <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
                         <span class="text-lavate-gold text-[10px] font-bold uppercase tracking-widest block mb-1">Branding</span>
                         <h3 class="text-xl font-cinzel">Apex Financial</h3>
@@ -661,8 +694,8 @@
                 </div>
 
                 <!-- Project 2 -->
-                <div class="group relative overflow-hidden rounded-sm cursor-pointer" data-aos="fade-up" data-aos-delay="100">
-                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Velvet Interiors" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Velvet Interiors Social Media" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100" loading="lazy">
                     <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
                         <span class="text-lavate-rose text-[10px] font-bold uppercase tracking-widest block mb-1">Social Media</span>
                         <h3 class="text-xl font-cinzel">Velvet Interiors</h3>
@@ -670,8 +703,8 @@
                 </div>
 
                 <!-- Project 3 -->
-                <div class="group relative overflow-hidden rounded-sm cursor-pointer" data-aos="fade-up" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="TechNova" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="TechNova Web Development" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100" loading="lazy">
                     <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
                         <span class="text-lavate-blue text-[10px] font-bold uppercase tracking-widest block mb-1">Web Dev</span>
                         <h3 class="text-xl font-cinzel">TechNova</h3>
@@ -680,14 +713,14 @@
             </div>
             
             <div class="mt-12 text-center md:hidden">
-                <a href="#" class="inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                <a href="#" class="inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
                     View Full Portfolio
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Minds Behind (Creative Modern) -->
+    <!-- Team Section -->
     <section class="py-32 bg-white relative px-6 lg:px-12">
         <div class="max-w-[1600px] mx-auto">
             <div class="mb-24 flex flex-col md:flex-row justify-between items-end border-b border-gray-200 pb-8">
@@ -702,26 +735,21 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
                 
                 <!-- Kamal Card -->
-                <div class="group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-pointer">
-                    <!-- Image -->
-                    <img src="https://kamalagency.in/IMG_6171.JPG" alt="Kamal Kumar" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" onerror="this.onerror=null;this.src='https://placehold.co/600x800/222/fff?text=Kamal';">
+                <div class="hover-trigger group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-none rounded-sm">
+                    <img src="https://kamalagency.in/IMG_6171.JPG" alt="Kamal Kumar" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';" loading="lazy">
                     
-                    <!-- Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 transition-opacity duration-500"></div>
                     
-                    <!-- Floating Accent -->
                     <div class="absolute top-6 right-6 w-12 h-12 border border-white/30 rounded-full flex items-center justify-center group-hover:bg-lavate-gold group-hover:border-lavate-gold transition-all duration-500">
                         <i class="fas fa-arrow-up rotate-45 text-white"></i>
                     </div>
 
-                    <!-- Content -->
                     <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <span class="inline-block px-3 py-1 mb-4 border border-lavate-gold text-lavate-gold text-[10px] font-bold uppercase tracking-widest bg-black/50 backdrop-blur-md">Founder & CEO</span>
+                        <span class="inline-block px-3 py-1 mb-4 border border-lavate-gold text-lavate-gold text-[10px] font-bold uppercase tracking-widest bg-black/50 backdrop-blur-md rounded-sm">Founder & CEO</span>
                         <h3 class="text-4xl font-cinzel text-white mb-4">Kamal Kumar</h3>
                         <p class="text-gray-300 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 line-clamp-4 md:line-clamp-none">
                             "Innovation isn't just a buzzword; it's our survival strategy. Coming from a content creation background, I built Lavate Media to bridge the gap between creative chaos and disciplined business growth."
                         </p>
-                        <!-- Socials -->
                         <div class="flex gap-4 mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
                              <a href="#" class="text-white hover:text-lavate-gold"><i class="fab fa-instagram text-xl"></i></a>
                              <a href="#" class="text-white hover:text-lavate-gold"><i class="fab fa-linkedin text-xl"></i></a>
@@ -730,26 +758,21 @@
                 </div>
 
                 <!-- Sujal Card -->
-                <div class="group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-pointer lg:mt-24"> <!-- Offset Top -->
-                    <!-- Image -->
-                    <img src="https://kamalagency.in/Sujal C.jpg" alt="Sujal C" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" onerror="this.onerror=null;this.src='https://placehold.co/600x800/222/fff?text=Sujal';">
+                <div class="hover-trigger group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-none rounded-sm lg:mt-24">
+                    <img src="https://kamalagency.in/Sujal C.jpg" alt="Sujal C" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';" loading="lazy">
                     
-                    <!-- Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 transition-opacity duration-500"></div>
                     
-                    <!-- Floating Accent -->
                     <div class="absolute top-6 right-6 w-12 h-12 border border-white/30 rounded-full flex items-center justify-center group-hover:bg-lavate-blue group-hover:border-lavate-blue transition-all duration-500">
                         <i class="fas fa-arrow-up rotate-45 text-white"></i>
                     </div>
 
-                    <!-- Content -->
                     <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <span class="inline-block px-3 py-1 mb-4 border border-lavate-blue text-lavate-blue text-[10px] font-bold uppercase tracking-widest bg-black/50 backdrop-blur-md">Co-Founder & Marketing</span>
+                        <span class="inline-block px-3 py-1 mb-4 border border-lavate-blue text-lavate-blue text-[10px] font-bold uppercase tracking-widest bg-black/50 backdrop-blur-md rounded-sm">Co-Founder & Marketing</span>
                         <h3 class="text-4xl font-cinzel text-white mb-4">Sujal C</h3>
                         <p class="text-gray-300 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 line-clamp-4 md:line-clamp-none">
                             "I ensure our campaigns don't just look good—they perform. My focus is on strategic collaborations and data-driven marketing that creates measurable impact for our partners."
                         </p>
-                         <!-- Socials -->
                         <div class="flex gap-4 mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
                              <a href="#" class="text-white hover:text-lavate-blue"><i class="fab fa-twitter text-xl"></i></a>
                              <a href="#" class="text-white hover:text-lavate-blue"><i class="fab fa-linkedin text-xl"></i></a>
@@ -761,53 +784,53 @@
         </div>
     </section>
 
-    <!-- Reviews / Testimonials (Expanded) -->
+    <!-- Reviews Section -->
     <section id="reviews" class="py-32 bg-lavate-light px-6 lg:px-12 border-t border-gray-200">
         <div class="max-w-[1400px] mx-auto">
             <h2 class="text-4xl text-lavate-black mb-16 text-center">Client Words</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Review 1 -->
-                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element">
+                <div class="hover-trigger bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element transition-shadow hover:shadow-2xl">
                     <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-gray-100"></i>
                     <div class="flex items-center gap-4 mb-6">
-                        <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-full grayscale object-cover" alt="Client">
+                        <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-full grayscale object-cover" alt="Rohan Verma" loading="lazy">
                         <div>
                             <p class="font-bold text-lavate-black text-sm">Rohan Verma</p>
                             <p class="text-xs text-lavate-gold uppercase">Founder, UrbanScale</p>
                         </div>
                     </div>
-                    <p class="text-gray-500 text-sm leading-relaxed">
+                    <p class="text-gray-500 text-sm leading-relaxed relative z-10">
                         "Lavate Media transformed our chaotic digital presence into a structured, revenue-generating machine. Their disciplined approach to branding is exactly what the Indian market needs right now."
                     </p>
                 </div>
 
                 <!-- Review 2 -->
-                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element">
+                <div class="hover-trigger bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element transition-shadow hover:shadow-2xl">
                     <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-gray-100"></i>
                     <div class="flex items-center gap-4 mb-6">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-full grayscale object-cover" alt="Client">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-full grayscale object-cover" alt="Sneha Kapoor" loading="lazy">
                         <div>
                             <p class="font-bold text-lavate-black text-sm">Sneha Kapoor</p>
                             <p class="text-xs text-lavate-rose uppercase">CMO, Luxora Interiors</p>
                         </div>
                     </div>
-                    <p class="text-gray-500 text-sm leading-relaxed">
+                    <p class="text-gray-500 text-sm leading-relaxed relative z-10">
                         "Working with Kamal and Sujal was refreshing. No fluff, just pure strategy. They understood our premium positioning perfectly and delivered assets that actually convert."
                     </p>
                 </div>
 
                 <!-- Review 3 -->
-                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element">
+                <div class="hover-trigger bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element transition-shadow hover:shadow-2xl">
                     <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-gray-100"></i>
                     <div class="flex items-center gap-4 mb-6">
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-full grayscale object-cover" alt="Client">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-full grayscale object-cover" alt="Aryan Malhotra" loading="lazy">
                         <div>
                             <p class="font-bold text-lavate-black text-sm">Aryan Malhotra</p>
                             <p class="text-xs text-lavate-blue uppercase">Director, TechFlow India</p>
                         </div>
                     </div>
-                    <p class="text-gray-500 text-sm leading-relaxed">
+                    <p class="text-gray-500 text-sm leading-relaxed relative z-10">
                         "The technical expertise at Lavate is unmatched. They built a robust, high-performance platform for us that scaled effortlessly. Professional, timely, and incredibly talented."
                     </p>
                 </div>
@@ -815,7 +838,7 @@
         </div>
     </section>
 
-    <!-- FAQ Section (Expanded) -->
+    <!-- FAQ Section -->
     <section id="faq" class="py-24 bg-white px-6 lg:px-12">
         <div class="max-w-3xl mx-auto">
             <h2 class="text-3xl text-center text-lavate-black mb-12">Frequently Asked Questions</h2>
@@ -823,66 +846,66 @@
             <div class="space-y-4">
                 <!-- Q1 -->
                 <details class="group bg-lavate-light p-6 rounded-sm cursor-pointer border border-transparent hover:border-lavate-gold/30 transition-all">
-                    <summary class="flex justify-between items-center font-bold text-lavate-black list-none">
+                    <summary class="hover-trigger flex justify-between items-center font-bold text-lavate-black list-none">
                         Do you work with startups?
                         <i class="fas fa-plus text-lavate-gold group-open:rotate-45 transition-transform"></i>
                     </summary>
-                    <p class="text-gray-500 text-sm mt-4 leading-relaxed">
+                    <p class="text-gray-500 text-sm mt-4 leading-relaxed animate-[fadeIn_0.5s]">
                         Yes. We partner with ambitious startups that understand the value of a strong brand foundation from day one.
                     </p>
                 </details>
 
                 <!-- Q2 -->
                 <details class="group bg-lavate-light p-6 rounded-sm cursor-pointer border border-transparent hover:border-lavate-gold/30 transition-all">
-                    <summary class="flex justify-between items-center font-bold text-lavate-black list-none">
+                    <summary class="hover-trigger flex justify-between items-center font-bold text-lavate-black list-none">
                         What are your pricing packages?
                         <i class="fas fa-plus text-lavate-gold group-open:rotate-45 transition-transform"></i>
                     </summary>
-                    <p class="text-gray-500 text-sm mt-4 leading-relaxed">
+                    <p class="text-gray-500 text-sm mt-4 leading-relaxed animate-[fadeIn_0.5s]">
                         We offer customized proposals based on your specific goals. However, we also have retainer packages for ongoing SEO and Social Media management.
                     </p>
                 </details>
 
                 <!-- Q3 -->
                 <details class="group bg-lavate-light p-6 rounded-sm cursor-pointer border border-transparent hover:border-lavate-gold/30 transition-all">
-                    <summary class="flex justify-between items-center font-bold text-lavate-black list-none">
+                    <summary class="hover-trigger flex justify-between items-center font-bold text-lavate-black list-none">
                         How long does a branding project take?
                         <i class="fas fa-plus text-lavate-gold group-open:rotate-45 transition-transform"></i>
                     </summary>
-                    <p class="text-gray-500 text-sm mt-4 leading-relaxed">
+                    <p class="text-gray-500 text-sm mt-4 leading-relaxed animate-[fadeIn_0.5s]">
                         Typically 4-6 weeks for a complete identity system (Logo, Guidelines, Typography, Collateral). We value depth over speed.
                     </p>
                 </details>
 
                 <!-- Q4 -->
                 <details class="group bg-lavate-light p-6 rounded-sm cursor-pointer border border-transparent hover:border-lavate-gold/30 transition-all">
-                    <summary class="flex justify-between items-center font-bold text-lavate-black list-none">
+                    <summary class="hover-trigger flex justify-between items-center font-bold text-lavate-black list-none">
                         Do you offer ongoing support after launch?
                         <i class="fas fa-plus text-lavate-gold group-open:rotate-45 transition-transform"></i>
                     </summary>
-                    <p class="text-gray-500 text-sm mt-4 leading-relaxed">
+                    <p class="text-gray-500 text-sm mt-4 leading-relaxed animate-[fadeIn_0.5s]">
                         Absolutely. We provide dedicated maintenance packages to ensure your digital assets remain secure, updated, and performing at peak efficiency long after the initial launch.
                     </p>
                 </details>
 
                 <!-- Q5 -->
                 <details class="group bg-lavate-light p-6 rounded-sm cursor-pointer border border-transparent hover:border-lavate-gold/30 transition-all">
-                    <summary class="flex justify-between items-center font-bold text-lavate-black list-none">
+                    <summary class="hover-trigger flex justify-between items-center font-bold text-lavate-black list-none">
                         How do we communicate during the project?
                         <i class="fas fa-plus text-lavate-gold group-open:rotate-45 transition-transform"></i>
                     </summary>
-                    <p class="text-gray-500 text-sm mt-4 leading-relaxed">
+                    <p class="text-gray-500 text-sm mt-4 leading-relaxed animate-[fadeIn_0.5s]">
                         We believe in transparency. You'll have access to a dedicated project channel (WhatsApp/Slack) and weekly video check-ins with the project lead, ensuring you're always in the loop.
                     </p>
                 </details>
 
                 <!-- Q6 -->
                 <details class="group bg-lavate-light p-6 rounded-sm cursor-pointer border border-transparent hover:border-lavate-gold/30 transition-all">
-                    <summary class="flex justify-between items-center font-bold text-lavate-black list-none">
+                    <summary class="hover-trigger flex justify-between items-center font-bold text-lavate-black list-none">
                         Can you help with content creation?
                         <i class="fas fa-plus text-lavate-gold group-open:rotate-45 transition-transform"></i>
                     </summary>
-                    <p class="text-gray-500 text-sm mt-4 leading-relaxed">
+                    <p class="text-gray-500 text-sm mt-4 leading-relaxed animate-[fadeIn_0.5s]">
                         Yes. Our in-house team handles everything from copywriting to high-end photography and video production, ensuring your brand voice remains consistent across all platforms.
                     </p>
                 </details>
@@ -890,7 +913,7 @@
         </div>
     </section>
 
-    <!-- Big CTA Section -->
+    <!-- CTA Section -->
     <section class="py-40 bg-brand-gradient text-white text-center px-6 relative overflow-hidden">
         <div class="absolute inset-0 bg-black/10"></div>
         <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-float"></div>
@@ -899,17 +922,17 @@
             <h2 class="text-5xl md:text-7xl font-cinzel mb-8">Ready to Elevate?</h2>
             <p class="text-xl text-white/90 font-light mb-12">Stop blending in. Start standing out.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#contact" class="px-12 py-5 bg-white text-lavate-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-xl">
+                <a href="#contact" class="hover-trigger px-12 py-5 bg-white text-lavate-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-xl rounded-sm">
                     Start Project
                 </a>
-                <a href="https://wa.me/917022776211" class="px-12 py-5 border border-white text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                <a href="https://wa.me/917022776211" class="hover-trigger px-12 py-5 border border-white text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
                     WhatsApp Us
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Footer (Massive) -->
+    <!-- Footer -->
     <footer id="contact" class="bg-lavate-black text-gray-400 pt-24 pb-12 px-6 lg:px-12 border-t border-white/5">
         <div class="max-w-[1600px] mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
@@ -921,13 +944,13 @@
                         Lavate Media is a professional creative and digital media brand. We represent growth, structure, and confidence.
                     </p>
                     <div class="flex gap-4">
-                        <a href="https://www.instagram.com/lavate_media" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-rose hover:text-white transition-colors">
+                        <a href="https://www.instagram.com/lavate_media" class="hover-trigger w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-rose hover:text-white transition-colors" aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/lavate-media-135b243a5" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-blue hover:text-white transition-colors">
+                        <a href="https://www.linkedin.com/in/lavate-media-135b243a5" class="hover-trigger w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-blue hover:text-white transition-colors" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
-                        </a>
-                         <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-gold hover:text-white transition-colors">
+                        </a> 
+                         <a href="#" class="hover-trigger w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-gold hover:text-white transition-colors" aria-label="Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
                     </div>
@@ -937,11 +960,11 @@
                 <div>
                     <h4 class="text-white font-bold uppercase tracking-widest mb-8 text-xs">Sitemap</h4>
                     <ul class="space-y-4 text-sm">
-                        <li><a href="#about" class="hover:text-lavate-gold transition-colors">About</a></li>
-                        <li><a href="#services" class="hover:text-lavate-gold transition-colors">Services</a></li>
-                        <li><a href="#work" class="hover:text-lavate-gold transition-colors">Work</a></li>
-                        <li><a href="#reviews" class="hover:text-lavate-gold transition-colors">Reviews</a></li>
-                        <li><a href="#contact" class="hover:text-lavate-gold transition-colors">Contact</a></li>
+                        <li><a href="#about" class="hover-trigger hover:text-lavate-gold transition-colors">About</a></li>
+                        <li><a href="#services" class="hover-trigger hover:text-lavate-gold transition-colors">Services</a></li>
+                        <li><a href="#work" class="hover-trigger hover:text-lavate-gold transition-colors">Work</a></li>
+                        <li><a href="#reviews" class="hover-trigger hover:text-lavate-gold transition-colors">Reviews</a></li>
+                        <li><a href="#contact" class="hover-trigger hover:text-lavate-gold transition-colors">Contact</a></li>
                     </ul>
                 </div>
 
@@ -949,11 +972,11 @@
                 <div>
                     <h4 class="text-white font-bold uppercase tracking-widest mb-8 text-xs">Services</h4>
                     <ul class="space-y-4 text-sm">
-                        <li><a href="#" class="hover:text-lavate-gold transition-colors">Brand Identity</a></li>
-                        <li><a href="#" class="hover:text-lavate-gold transition-colors">Web Development</a></li>
-                        <li><a href="#" class="hover:text-lavate-gold transition-colors">SEO & Strategy</a></li>
-                        <li><a href="#" class="hover:text-lavate-gold transition-colors">Content Creation</a></li>
-                        <li><a href="#" class="hover:text-lavate-gold transition-colors">Social Media</a></li>
+                        <li><a href="#" class="hover-trigger hover:text-lavate-gold transition-colors">Brand Identity</a></li>
+                        <li><a href="#" class="hover-trigger hover:text-lavate-gold transition-colors">Web Development</a></li>
+                        <li><a href="#" class="hover-trigger hover:text-lavate-gold transition-colors">SEO & Strategy</a></li>
+                        <li><a href="#" class="hover-trigger hover:text-lavate-gold transition-colors">Content Creation</a></li>
+                        <li><a href="#" class="hover-trigger hover:text-lavate-gold transition-colors">Social Media</a></li>
                     </ul>
                 </div>
 
@@ -967,11 +990,11 @@
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fas fa-phone text-lavate-gold"></i>
-                            <a href="tel:+917022776211" class="hover:text-white">+91 70227 76211</a>
+                            <a href="tel:+917022776211" class="hover-trigger hover:text-white">+91 70227 76211</a>
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fas fa-envelope text-lavate-gold"></i>
-                            <a href="mailto:contact@lavatemedia.com" class="hover:text-white">contact@lavatemedia.com</a>
+                            <a href="mailto:contact@lavatemedia.com" class="hover-trigger hover:text-white">contact@lavatemedia.com</a>
                         </li>
                     </ul>
                     
@@ -979,7 +1002,7 @@
                         <h4 class="text-white font-bold uppercase tracking-widest mb-4 text-xs">Newsletter</h4>
                         <form class="flex border-b border-white/20 pb-2">
                             <input type="email" placeholder="Email Address" class="bg-transparent w-full outline-none text-white placeholder-gray-600 text-sm">
-                            <button class="text-lavate-gold font-bold uppercase text-xs">Join</button>
+                            <button class="hover-trigger text-lavate-gold font-bold uppercase text-xs hover:text-white transition-colors">Join</button>
                         </form>
                     </div>
                 </div>
@@ -988,8 +1011,8 @@
             <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs tracking-widest uppercase">
                 <p>&copy; 2026 Lavate Media. All Rights Reserved.</p>
                 <div class="flex gap-8 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-white">Privacy Policy</a>
-                    <a href="#" class="hover:text-white">Terms of Service</a>
+                    <a href="#" class="hover-trigger hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover-trigger hover:text-white">Terms of Service</a>
                 </div>
             </div>
         </div>
@@ -1006,32 +1029,59 @@
             easing: 'ease-out-cubic',
         });
 
-        // Preloader Logic
+        // Optimized Preloader Logic
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
+            // Slight delay to ensure visuals are rendered
             setTimeout(() => {
                 preloader.style.opacity = '0';
                 preloader.style.visibility = 'hidden';
-            }, 1500);
+            }, 800); 
         });
 
-        // Custom Cursor Logic
+        /**
+         * Optimized Custom Cursor Logic
+         * Uses Linear Interpolation (Lerp) for smooth following without lag.
+         * Runs on requestAnimationFrame for 60fps performance.
+         */
         const dot = document.getElementById('cursor-dot');
         const outline = document.getElementById('cursor-outline');
         
+        let mouseX = 0, mouseY = 0; // Actual mouse position
+        let dotX = 0, dotY = 0;     // Dot position
+        let outX = 0, outY = 0;     // Outline position
+        
+        // Configuration
+        const delay = 0.15; // Lower = faster follow
+        
+        // Track mouse coordinates efficiently
         window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
             
-            // Dot follows instantly
-            dot.style.left = `${posX}px`;
-            dot.style.top = `${posY}px`;
+            // Move dot instantly
+            dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+        });
+
+        // Animation Loop
+        function animateCursor() {
+            // Lerp formula: Current + (Target - Current) * factor
+            outX += (mouseX - outX) * delay;
+            outY += (mouseY - outY) * delay;
             
-            // Outline follows with slight delay (animation in CSS transition)
-            outline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+            outline.style.transform = `translate(${outX}px, ${outY}px) translate(-50%, -50%)`;
+            
+            requestAnimationFrame(animateCursor);
+        }
+        
+        // Start Loop
+        animateCursor();
+
+        // Hover Effect Logic for Links/Buttons
+        const hoverElements = document.querySelectorAll('.hover-trigger, a, button');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
 
         // Mobile Menu Logic
@@ -1042,7 +1092,12 @@
 
         function toggleMenu() {
             mobileMenu.classList.toggle('translate-x-full');
-            document.body.classList.toggle('overflow-hidden');
+            
+            if (!mobileMenu.classList.contains('translate-x-full')) {
+                 document.body.style.overflow = 'hidden';
+            } else {
+                 document.body.style.overflow = '';
+            }
         }
 
         menuToggle.addEventListener('click', toggleMenu);
@@ -1052,15 +1107,55 @@
             link.addEventListener('click', toggleMenu);
         });
 
-        // Navbar Scroll Effect
+        /**
+         * Optimized Navbar Scroll Effect
+         * Uses a flag to prevent layout thrashing on every pixel scroll
+         */
+        const nav = document.getElementById('navbar');
+        let ticking = false;
+
         window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if(window.scrollY > 50) {
-                nav.classList.add('shadow-lg');
-            } else {
-                nav.classList.remove('shadow-lg');
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    if(window.scrollY > 50) {
+                        nav.classList.add('glass-nav', 'py-0');
+                    } else {
+                        nav.classList.remove('glass-nav', 'py-0');
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
         });
+
+        /**
+         * Vanilla JS 3D Tilt Effect for Cards
+         * Adds a premium interactive feel to review cards
+         */
+        const tiltCards = document.querySelectorAll('.tilt-card-element');
+        
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calculate center
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Rotation limit
+                const rotateX = ((y - centerY) / centerY) * -5; // Max 5deg tilt
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            });
+        });
+
     </script>
 </body>
 </html>
