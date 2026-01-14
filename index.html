@@ -74,6 +74,17 @@
         :root {
             --cursor-size: 8px;
             --cursor-outline-size: 40px;
+            /* Marquee Variables - Default (Mobile) */
+            --marquee-gap: 30px;
+            --marquee-duration: 8s;
+        }
+
+        /* Desktop Overrides */
+        @media (min-width: 769px) {
+            :root {
+                --marquee-gap: 80px;
+                --marquee-duration: 25s;
+            }
         }
 
         body {
@@ -177,58 +188,47 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Seamless Infinite Marquee */
-        .marquee-wrapper {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
+        /* Robust Marquee System */
+        .marquee {
             display: flex;
+            overflow: hidden;
             user-select: none;
+            gap: var(--marquee-gap);
+            width: 100%;
             mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-            padding: 20px 0;
         }
 
-        .marquee-track {
+        .marquee__group {
+            flex-shrink: 0;
             display: flex;
             align-items: center;
-            width: max-content;
-            gap: 40px; 
-            animation: scroll 15s linear infinite;
-            will-change: transform;
+            justify-content: space-around;
+            gap: var(--marquee-gap);
+            min-width: 100%;
+            animation: scroll var(--marquee-duration) linear infinite;
         }
 
-        .marquee-wrapper:hover .marquee-track {
+        /* Stops scroll on hover */
+        .marquee:hover .marquee__group {
             animation-play-state: paused;
         }
 
-        /* Responsive Animation & Spacing */
-        @media (max-width: 768px) {
-            .marquee-track {
-                animation-duration: 6s; 
-                gap: 30px;
-            }
-            .brand-logo {
-                height: 40px !important;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .marquee-track {
-                gap: 80px;
-            }
-        }
-
         @keyframes scroll {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); } 
+            from {
+                transform: translateX(0);
+            }
+            to {
+                /* Moves -100% of the group width minus the gap to match the next group perfectly */
+                transform: translateX(calc(-100% - var(--marquee-gap)));
+            }
         }
 
         .brand-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Prevents logo collapse */
             opacity: 0.6;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -241,8 +241,9 @@
         }
 
         .brand-logo {
-            height: 60px;
+            /* Explicit heights handled in HTML to prevent layout shifts */
             width: auto;
+            max-width: none; /* Prevents squashing */
             object-fit: contain;
             filter: grayscale(100%);
             transition: filter 0.3s;
@@ -451,57 +452,31 @@
         </div>
     </header>
 
-    <!-- Trusted By (Marquee) -->
+    <!-- Trusted By (Refined Variable Marquee) -->
     <div class="py-16 bg-white border-b border-gray-100 relative z-30 overflow-hidden">
         <p class="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-12">Trusted by Industry Leaders</p>
         
-        <div class="marquee-wrapper">
-            <div class="marquee-track">
-                <!-- LOGO SET 1 -->
-                <div class="brand-item hover-trigger">
-                    <img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                
-                <!-- DUPLICATE SET 1 -->
-                <div class="brand-item hover-trigger">
-                    <img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
-                <div class="brand-item hover-trigger">
-                    <img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo" width="100" height="60" loading="lazy">
-                </div>
+        <div class="marquee">
+            <!-- Group 1 -->
+            <div class="marquee__group">
+                <div class="brand-item hover-trigger"><img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+            </div>
+            
+            <!-- Group 2 (Duplicate for Loop) -->
+            <div class="marquee__group" aria-hidden="true">
+                <div class="brand-item hover-trigger"><img src="https://thegurumedia.in/img/Dream11_logo.svg.png" alt="Dream11" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- winzo.jpg" alt="Winzo" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- achat.jpg" alt="Achat" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- theman.jpg" alt="The Man Company" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
             </div>
         </div>
     </div>
