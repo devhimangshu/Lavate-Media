@@ -17,10 +17,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- GSAP for High-End Animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -110,14 +106,14 @@
             width: 40px;
             height: 40px;
             border: 1px solid rgba(10, 9, 12, 0.5);
-            transition: width 0.1s, height 0.1s, background-color 0.2s;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
         }
         
         /* Hover State for Cursor */
         body:hover .cursor-outline {
             border-color: #E7A349;
         }
-        a:hover ~ .cursor-outline, button:hover ~ .cursor-outline, .hover-trigger:hover ~ .cursor-outline {
+        a:hover ~ .cursor-outline, button:hover ~ .cursor-outline {
             transform: scale(1.5);
             background-color: rgba(231, 163, 73, 0.1);
         }
@@ -215,9 +211,7 @@
             filter: contrast(1.05); 
         }
 
-        /* --------------------------------- 
-           Creative Splash Screen Styles 
-           --------------------------------- */
+        /* Pixel Preloader Canvas */
         #preloader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -226,43 +220,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            /* Super smooth fade out curve */
-            transition: opacity 1.2s cubic-bezier(0.77, 0, 0.175, 1), visibility 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            transition: opacity 0.8s ease-out, visibility 0.8s;
         }
-
-        /* Hide loader content when class 'loaded' is added */
-        .loaded #preloader {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
         canvas#splash-canvas {
             display: block;
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* Main Content Transition (Parallax Entry) */
-        main-content-wrapper {
-            opacity: 0;
-            transform: scale(0.95) translateY(20px);
-            transition: opacity 1.5s ease-out, transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
-            will-change: transform, opacity;
-        }
-        
-        body.is-ready main-content-wrapper {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        /* 3D Tilt Card Effect */
-        .tilt-card {
-            transform-style: preserve-3d;
-            perspective: 1000px;
         }
         
         /* Floating WhatsApp */
@@ -296,9 +257,6 @@
         <canvas id="splash-canvas"></canvas>
     </div>
 
-    <!-- Wrapper for Page Content Transition -->
-    <main-content-wrapper class="block w-full">
-
     <!-- Custom Cursor Elements -->
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
@@ -309,25 +267,25 @@
             <div class="flex justify-between items-center h-24">
                 
                 <!-- Logo -->
-                <a href="#" class="flex-shrink-0 z-50 group magnetic-btn">
+                <a href="#" class="flex-shrink-0 z-50 group">
                     <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media" class="h-12 w-auto object-contain transition-transform group-hover:scale-105"> 
                 </a>
 
                 <!-- Desktop Menu -->
                 <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
-                    <a href="#about" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-gold transition-colors py-2 magnetic-btn">About</a>
-                    <a href="#services" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-rose transition-colors py-2 magnetic-btn">Services</a>
-                    <a href="#work" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-blue transition-colors py-2 magnetic-btn">Work</a>
-                    <a href="#reviews" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2 magnetic-btn">Reviews</a>
-                    <a href="#faq" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2 magnetic-btn">FAQ</a>
+                    <a href="#about" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-gold transition-colors py-2">About</a>
+                    <a href="#services" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-rose transition-colors py-2">Services</a>
+                    <a href="#work" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-blue transition-colors py-2">Work</a>
+                    <a href="#reviews" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2">Reviews</a>
+                    <a href="#faq" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2">FAQ</a>
                 </div>
 
                 <!-- Right Action -->
                 <div class="hidden lg:flex items-center gap-6">
-                    <a href="tel:+917022776211" class="text-white hover:text-lavate-gold text-xs font-bold tracking-widest transition-colors magnetic-btn">
+                    <a href="tel:+917022776211" class="text-white hover:text-lavate-gold text-xs font-bold tracking-widest transition-colors">
                         +91 70227 76211
                     </a>
-                    <a href="#contact" class="group relative px-6 py-2 bg-white text-lavate-black overflow-hidden font-bold text-xs uppercase tracking-widest hover:text-white transition-colors magnetic-btn">
+                    <a href="#contact" class="group relative px-6 py-2 bg-white text-lavate-black overflow-hidden font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">
                          <div class="absolute inset-0 w-0 bg-lavate-gold transition-all duration-[250ms] ease-out group-hover:w-full z-0"></div>
                          <span class="relative z-10">Start Project</span>
                     </a>
@@ -366,26 +324,25 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Hero Section (Video Background with Parallax) -->
-    <header class="relative min-h-screen flex items-center justify-center pt-20 bg-lavate-black overflow-hidden hero-section">
+    <!-- Hero Section (Video Background) -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 bg-lavate-black overflow-hidden">
         <!-- Background Video -->
-        <div class="absolute inset-0 z-0 video-container">
-            <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover opacity-60">
-                <source src="https://lavatemedia.in/assets/lavate-herobgvid.mp4" type="video/mp4">
-            </video>
-        </div>
+        <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" class="absolute inset-0 w-full h-full object-cover z-0 opacity-60">
+            <source src="https://lavatemedia.in/assets/lavate-herobgvid.mp4" type="video/mp4">
+        </video>
         <!-- Dark Overlay for readability -->
         <div class="absolute inset-0 bg-black/50 z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-lavate-black via-transparent to-lavate-black/80 z-10"></div>
         
-        <div class="max-w-[1600px] mx-auto px-6 lg:px-12 relative z-20 text-center hero-content">
+        <div class="max-w-[1600px] mx-auto px-6 lg:px-12 relative z-20 text-center">
             
             <div class="inline-block mb-6 px-4 py-2 border border-white/10 rounded-full bg-white/5 backdrop-blur-sm" data-aos="fade-down">
                 <span class="text-[10px] md:text-xs font-bold tracking-[0.3em] text-lavate-gold uppercase">Built to Elevate</span>
             </div>
             
-            <h1 class="text-5xl md:text-7xl lg:text-9xl font-cinzel text-white mb-8 tracking-tight leading-none drop-shadow-2xl scramble-text">
-                LAVATE MEDIA
+            <h1 class="text-5xl md:text-7xl lg:text-9xl font-cinzel text-white mb-8 tracking-tight leading-none drop-shadow-2xl" data-aos="zoom-in" data-aos-duration="1000">
+                LAVATE <br> 
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-lavate-gold via-lavate-rose to-lavate-blue">MEDIA</span>
             </h1>
             
             <p class="text-gray-200 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed drop-shadow-md" data-aos="fade-up" data-aos-delay="200">
@@ -393,10 +350,10 @@
             </p>
 
             <div class="flex flex-col md:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="400">
-                <a href="#services" class="magnetic-btn px-10 py-4 bg-brand-gradient text-white font-bold uppercase tracking-widest text-xs hover:shadow-glow-gold transition-all hover:scale-105 border border-transparent">
+                <a href="#services" class="px-10 py-4 bg-brand-gradient text-white font-bold uppercase tracking-widest text-xs hover:shadow-glow-gold transition-all hover:scale-105 border border-transparent">
                     Explore Capabilities
                 </a>
-                <a href="#work" class="magnetic-btn px-10 py-4 border border-white/40 bg-black/20 backdrop-blur-sm text-white font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all">
+                <a href="#work" class="px-10 py-4 border border-white/40 bg-black/20 backdrop-blur-sm text-white font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all">
                     View Portfolio
                 </a>
             </div>
@@ -483,11 +440,11 @@
                     <!-- Stats Grid -->
                     <div class="grid grid-cols-3 gap-4 md:gap-8 mt-12 border-t border-gray-200 pt-8">
                         <div>
-                            <h4 class="text-3xl md:text-4xl font-cinzel text-lavate-black mb-1 count-up" data-target="4">0</h4>
+                            <h4 class="text-3xl md:text-4xl font-cinzel text-lavate-black mb-1">4+</h4>
                             <p class="text-[10px] md:text-xs uppercase tracking-widest text-gray-400 font-bold">Years Active</p>
                         </div>
                         <div>
-                            <h4 class="text-3xl md:text-4xl font-cinzel text-lavate-black mb-1 count-up" data-target="1000">0</h4>
+                            <h4 class="text-3xl md:text-4xl font-cinzel text-lavate-black mb-1">1000+</h4>
                             <p class="text-[10px] md:text-xs uppercase tracking-widest text-gray-400 font-bold">Projects</p>
                         </div>
                          <div>
@@ -503,7 +460,7 @@
                     <div class="absolute top-4 -right-4 w-full h-full border-2 border-lavate-gold/30 rounded-sm hidden md:block"></div>
                     
                     <!-- Main Image Container - Square on mobile, tall on desktop -->
-                    <div class="relative aspect-square lg:aspect-[4/5] w-full overflow-hidden rounded-sm shadow-2xl group tilt-card-element">
+                    <div class="relative aspect-square lg:aspect-[4/5] w-full overflow-hidden rounded-sm shadow-2xl group">
                         <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" alt="Team Strategy" class="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-110">
                         
                         <!-- Floating Card -->
@@ -528,7 +485,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Service 1 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden tilt-card-element" data-aos="fade-up" data-aos-delay="0">
+                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="0">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-lavate-gold/10 rounded-bl-full group-hover:bg-lavate-gold/20 transition-colors"></div>
                     
                     <i class="fas fa-layer-group text-4xl text-lavate-gold mb-8 group-hover:scale-110 transition-transform duration-300"></i>
@@ -551,7 +508,7 @@
                 </div>
 
                 <!-- Service 2 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden tilt-card-element" data-aos="fade-up" data-aos-delay="100">
+                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="100">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-lavate-rose/10 rounded-bl-full group-hover:bg-lavate-rose/20 transition-colors"></div>
                     
                     <i class="fas fa-video text-4xl text-lavate-rose mb-8 group-hover:scale-110 transition-transform duration-300"></i>
@@ -574,7 +531,7 @@
                 </div>
 
                 <!-- Service 3 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden tilt-card-element" data-aos="fade-up" data-aos-delay="200">
+                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="200">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-lavate-blue/10 rounded-bl-full group-hover:bg-lavate-blue/20 transition-colors"></div>
                     
                     <i class="fas fa-globe text-4xl text-lavate-blue mb-8 group-hover:scale-110 transition-transform duration-300"></i>
@@ -597,7 +554,7 @@
                 </div>
 
                 <!-- Service 4 -->
-                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden tilt-card-element" data-aos="fade-up" data-aos-delay="300">
+                <div class="group relative bg-lavate-light p-8 lg:p-10 hover:bg-lavate-black transition-colors duration-500 overflow-hidden" data-aos="fade-up" data-aos-delay="300">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-white rounded-bl-full group-hover:bg-gray-800 transition-colors"></div>
                     
                     <i class="fas fa-chart-line text-4xl text-lavate-black mb-8 group-hover:text-white group-hover:scale-110 transition-transform duration-300"></i>
@@ -627,7 +584,7 @@
         <div class="max-w-[1600px] mx-auto">
             <div class="flex justify-between items-center mb-16 border-b border-white/10 pb-6">
                 <h2 class="text-3xl md:text-4xl font-cinzel">Selected Works</h2>
-                <a href="#" class="hidden md:inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all magnetic-btn">
+                <a href="#" class="hidden md:inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
                     View Full Portfolio
                 </a>
             </div>
@@ -635,7 +592,7 @@
             <!-- Compact Creative Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Project 1 -->
-                <div class="group relative overflow-hidden rounded-sm cursor-pointer tilt-card-element" data-aos="fade-up">
+                <div class="group relative overflow-hidden rounded-sm cursor-pointer" data-aos="fade-up">
                     <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Apex Finance" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                     <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
                         <span class="text-lavate-gold text-[10px] font-bold uppercase tracking-widest block mb-1">Branding</span>
@@ -644,7 +601,7 @@
                 </div>
 
                 <!-- Project 2 -->
-                <div class="group relative overflow-hidden rounded-sm cursor-pointer tilt-card-element" data-aos="fade-up" data-aos-delay="100">
+                <div class="group relative overflow-hidden rounded-sm cursor-pointer" data-aos="fade-up" data-aos-delay="100">
                     <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Velvet Interiors" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                     <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
                         <span class="text-lavate-rose text-[10px] font-bold uppercase tracking-widest block mb-1">Social Media</span>
@@ -653,7 +610,7 @@
                 </div>
 
                 <!-- Project 3 -->
-                <div class="group relative overflow-hidden rounded-sm cursor-pointer tilt-card-element" data-aos="fade-up" data-aos-delay="200">
+                <div class="group relative overflow-hidden rounded-sm cursor-pointer" data-aos="fade-up" data-aos-delay="200">
                     <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="TechNova" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                     <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
                         <span class="text-lavate-blue text-[10px] font-bold uppercase tracking-widest block mb-1">Web Dev</span>
@@ -685,7 +642,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
                 
                 <!-- Kamal Card -->
-                <div class="group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-pointer tilt-card-element">
+                <div class="group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-pointer">
                     <!-- Image -->
                     <img src="https://kamalagency.in/IMG_6171.JPG" alt="Kamal Kumar" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" onerror="this.onerror=null;this.src='https://placehold.co/600x800/222/fff?text=Kamal';">
                     
@@ -713,7 +670,7 @@
                 </div>
 
                 <!-- Sujal Card -->
-                <div class="group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-pointer lg:mt-24 tilt-card-element"> <!-- Offset Top -->
+                <div class="group relative h-[600px] w-full bg-gray-100 overflow-hidden cursor-pointer lg:mt-24"> <!-- Offset Top -->
                     <!-- Image -->
                     <img src="https://kamalagency.in/Sujal C.jpg" alt="Sujal C" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" onerror="this.onerror=null;this.src='https://placehold.co/600x800/222/fff?text=Sujal';">
                     
@@ -751,7 +708,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Review 1 -->
-                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element">
+                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm">
                     <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-gray-100"></i>
                     <div class="flex items-center gap-4 mb-6">
                         <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full grayscale" alt="Client">
@@ -766,7 +723,7 @@
                 </div>
 
                 <!-- Review 2 -->
-                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element">
+                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm">
                     <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-gray-100"></i>
                     <div class="flex items-center gap-4 mb-6">
                         <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full grayscale" alt="Client">
@@ -781,7 +738,7 @@
                 </div>
 
                 <!-- Review 3 -->
-                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm tilt-card-element">
+                <div class="bg-white p-8 border border-gray-100 shadow-lg relative rounded-sm">
                     <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-gray-100"></i>
                     <div class="flex items-center gap-4 mb-6">
                         <img src="https://randomuser.me/api/portraits/men/85.jpg" class="w-12 h-12 rounded-full grayscale" alt="Client">
@@ -882,10 +839,10 @@
             <h2 class="text-5xl md:text-7xl font-cinzel mb-8">Ready to Elevate?</h2>
             <p class="text-xl text-white/90 font-light mb-12">Stop blending in. Start standing out.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#contact" class="px-12 py-5 bg-white text-lavate-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-xl magnetic-btn">
+                <a href="#contact" class="px-12 py-5 bg-white text-lavate-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-xl">
                     Start Project
                 </a>
-                <a href="https://wa.me/917022776211" class="px-12 py-5 border border-white text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all magnetic-btn">
+                <a href="https://wa.me/917022776211" class="px-12 py-5 border border-white text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
                     WhatsApp Us
                 </a>
             </div>
@@ -977,9 +934,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Wrapper for Page Content Transition -->
-    <main-content-wrapper class="block w-full">
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -1094,119 +1048,7 @@
                 const preloader = document.getElementById('preloader');
                 preloader.style.opacity = '0';
                 preloader.style.visibility = 'hidden';
-                
-                // Trigger Text Scramble
-                scrambleText();
-                
-                // Add Loaded Class for Content Transition
-                document.body.classList.add('is-ready');
-
             }, 3000); // 3 seconds animation time
-        });
-
-        // -------------------------
-        // DYNAMIC INTERACTIONS
-        // -------------------------
-
-        // 1. Magnetic Buttons
-        const magneticBtns = document.querySelectorAll('.magnetic-btn');
-        magneticBtns.forEach(btn => {
-            btn.addEventListener('mousemove', function(e) {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                
-                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            });
-            
-            btn.addEventListener('mouseleave', function() {
-                btn.style.transform = 'translate(0, 0)';
-            });
-        });
-
-        // 2. 3D Tilt Effect for Team Cards
-        const tiltCards = document.querySelectorAll('.tilt-card-element');
-        tiltCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -5; // Max 5 deg tilt
-                const rotateY = ((x - centerX) / centerX) * 5;
-
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-            });
-        });
-
-        // 3. Text Scramble Effect
-        function scrambleText() {
-            const el = document.querySelector('.scramble-text');
-            if(!el) return;
-            const originalText = el.innerText;
-            const chars = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
-            let iterations = 0;
-            
-            const interval = setInterval(() => {
-                el.innerText = originalText.split('')
-                    .map((letter, index) => {
-                        if(index < iterations) {
-                            return originalText[index];
-                        }
-                        return chars[Math.floor(Math.random() * chars.length)];
-                    })
-                    .join('');
-                
-                if(iterations >= originalText.length) clearInterval(interval);
-                iterations += 1/3;
-            }, 30);
-        }
-        
-        // 4. Counter Up Animation
-        const counters = document.querySelectorAll('.count-up');
-        const speed = 200; // The lower the slower
-
-        const animateCounters = () => {
-             counters.forEach(counter => {
-                const updateCount = () => {
-                    const target = +counter.getAttribute('data-target');
-                    const count = +counter.innerText;
-                    
-                    // Lower inc to slow and higher to slow
-                    const inc = target / speed;
-                    
-                    if (count < target) {
-                        // Add inc to count and output in counter
-                        counter.innerText = Math.ceil(count + inc);
-                        // Call function every ms
-                        setTimeout(updateCount, 20);
-                    } else {
-                        counter.innerText = target + "+";
-                    }
-                };
-                updateCount();
-            });
-        }
-        
-        // Trigger Counter on Scroll
-        let counterTriggered = false;
-        window.addEventListener('scroll', () => {
-            const statsSection = document.querySelector('.grid.grid-cols-3');
-            if(statsSection) {
-                 const sectionPos = statsSection.getBoundingClientRect().top;
-                 const screenPos = window.innerHeight / 1.3;
-                 
-                 if(sectionPos < screenPos && !counterTriggered) {
-                     animateCounters();
-                     counterTriggered = true;
-                 }
-            }
         });
 
 
@@ -1223,8 +1065,10 @@
             dot.style.top = `${posY}px`;
             
             // Outline follows with slight delay (animation in CSS transition)
-            outline.style.left = `${posX}px`;
-            outline.style.top = `${posY}px`;
+            outline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
         });
 
         // Mobile Menu Logic
