@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | Lavate Media</title>
+    <meta name="theme-color" content="#0A090C">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://lavatemedia.in/assets/lavate-logo.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lavate: {
+                            black: '#0A090C',
+                            gold: '#E7A349',
+                            blue: '#5459AB',
+                            rose: '#C36F86',
+                            dark: '#121214',
+                            gray: '#1A1A1D'
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'brand-gradient': 'linear-gradient(135deg, #E7A349, #C36F86, #5459AB)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0A090C;
+            color: #F8F8FA;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0A090C; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E7A349; }
+
+        .glass-panel {
+            background: rgba(18, 18, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Loader */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-left-color: #E7A349;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="antialiased selection:bg-lavate-gold selection:text-black h-screen overflow-hidden flex flex-col">
+
+    <!-- Notifications -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[100] space-y-3"></div>
+
+    <!-- Email Modal -->
+    <div id="email-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm">
+        <div class="bg-lavate-dark border border-white/10 p-8 rounded-sm shadow-2xl w-full max-w-lg relative">
+            <button onclick="closeEmailModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+            <h3 class="text-xl font-cinzel text-white mb-6">Compose Reply</h3>
+            <form id="email-form" class="space-y-4">
+                <input type="hidden" id="email-to">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">To</label>
+                    <input type="text" id="email-to-display" disabled class="w-full bg-white/5 border border-white/10 rounded-sm py-2 px-4 text-gray-400 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Subject</label>
+                    <input type="text" id="email-subject" value="Re: Your Inquiry at Lavate Media" class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-sm focus:border-lavate-gold focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Message</label>
+                    <textarea id="email-body" rows="6" class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-sm focus:border-lavate-gold focus:outline-none"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-brand-gradient text-white font-bold uppercase tracking-widest text-xs hover:shadow-lg transition-all rounded-sm">
+                    Open Mail Client
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login View -->
+    <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
+        
+        <div class="relative w-full max-w-md p-8 rounded-sm glass-panel shadow-2xl border-t border-lavate-gold/20">
+            <div class="text-center mb-8">
+                <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media" class="h-12 mx-auto mb-6 opacity-90">
+                <h2 class="text-2xl font-cinzel text-white">Admin Portal</h2>
+                <p class="text-gray-500 text-xs uppercase tracking-widest mt-2">Restricted Access</p>
+            </div>
+
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Admin ID</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-3.5 text-gray-600"></i>
+                        <input type="text" id="admin-id" class="w-full bg-lavate-black border border-white/10 rounded-sm py-3 pl-10 pr-4 text-white focus:outline-none focus:border-lavate-gold transition-colors placeholder-gray-700" placeholder="Enter ID">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Passkey</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-3.5 text-gray-600"></i>
+                        <input type="password" id="admin-pass" class="w-full bg-lavate-black border border-white/10 rounded-sm py-3 pl-10 pr-4 text-white focus:outline-none focus:border-lavate-gold transition-colors placeholder-gray-700" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button type="submit" id="login-btn" class="w-full py-3.5 bg-brand-gradient text-white font-bold uppercase tracking-widest text-xs hover:shadow-lg hover:shadow-lavate-gold/20 transition-all rounded-sm flex justify-center items-center gap-2">
+                    <span>Authenticate</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard View (Hidden by default) -->
+    <div id="dashboard-view" class="hidden flex-1 flex overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-lavate-dark border-r border-white/5 flex flex-col hidden md:flex">
+            <div class="h-20 flex items-center px-8 border-b border-white/5">
+                <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate" class="h-8">
+            </div>
+
+            <nav class="flex-1 p-6 space-y-2">
+                <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4">Main Menu</p>
+                
+                <button onclick="switchTab('overview')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm text-lavate-gold bg-white/5 rounded-sm border-l-2 border-lavate-gold transition-all">
+                    <i class="fas fa-chart-pie w-5 text-center"></i> Overview
+                </button>
+                
+                <button onclick="switchTab('inbox')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-sm border-l-2 border-transparent transition-all">
+                    <i class="fas fa-inbox w-5 text-center"></i> Inbox
+                    <span id="unread-count" class="ml-auto text-[10px] bg-lavate-rose text-white px-1.5 py-0.5 rounded-full hidden">0</span>
+                </button>
+
+                <button onclick="switchTab('portfolio')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-sm border-l-2 border-transparent transition-all">
+                    <i class="fas fa-briefcase w-5 text-center"></i> Portfolio
+                </button>
+
+                <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest mt-8 mb-4">System</p>
+                
+                <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-sm transition-all">
+                    <i class="fas fa-sign-out-alt w-5 text-center"></i> Logout
+                </button>
+            </nav>
+
+            <div class="p-6 border-t border-white/5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-lavate-gold to-lavate-rose flex items-center justify-center text-white font-bold text-lg" id="admin-avatar">
+                        K
+                    </div>
+                    <div>
+                        <p class="text-sm text-white font-cinzel" id="admin-name-display">Admin</p>
+                        <p class="text-[10px] text-green-500 uppercase tracking-wider flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col bg-lavate-black relative">
+            
+            <!-- Mobile Header -->
+            <div class="h-16 border-b border-white/5 flex items-center justify-between px-6 md:hidden bg-lavate-dark">
+                <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate" class="h-6">
+                <button onclick="logout()" class="text-gray-400 hover:text-white"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-y-auto p-6 lg:p-10 scroll-smooth">
+                
+                <!-- Tab: Overview -->
+                <div id="tab-overview" class="space-y-8 fade-in">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h1 class="text-3xl font-cinzel text-white">Dashboard Overview</h1>
+                            <p class="text-gray-500 text-sm mt-1">Real-time insights and performance metrics.</p>
+                        </div>
+                        <button onclick="refreshData()" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-lavate-gold hover:border-lavate-gold transition-colors">
+                            <i class="fas fa-sync-alt text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Stats Cards Container -->
+                    <div id="stats-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Default Total Card -->
+                        <div class="glass-panel p-6 rounded-sm relative overflow-hidden group">
+                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-lavate-gold/10 rounded-full group-hover:bg-lavate-gold/20 transition-colors"></div>
+                            <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Total Leads</p>
+                            <h3 class="text-3xl font-cinzel text-white" id="stat-total">0</h3>
+                        </div>
+                        <!-- Default Month Card -->
+                        <div class="glass-panel p-6 rounded-sm relative overflow-hidden group">
+                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-green-500/10 rounded-full group-hover:bg-green-500/20 transition-colors"></div>
+                            <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">This Month</p>
+                            <h3 class="text-3xl font-cinzel text-white" id="stat-month">0</h3>
+                        </div>
+                        <!-- Other cards injected by JS -->
+                    </div>
+
+                    <!-- Charts Area -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Main Line Chart -->
+                        <div class="lg:col-span-2 glass-panel p-6 rounded-sm">
+                            <h4 class="text-sm text-white font-bold mb-6 flex items-center gap-2">
+                                <i class="fas fa-chart-line text-lavate-gold"></i> Lead Growth Trend
+                            </h4>
+                            <div class="h-64">
+                                <canvas id="growthChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Pie Chart -->
+                        <div class="glass-panel p-6 rounded-sm">
+                            <h4 class="text-sm text-white font-bold mb-6 flex items-center gap-2">
+                                <i class="fas fa-chart-pie text-lavate-rose"></i> Services Breakdown
+                            </h4>
+                            <div class="h-64 flex justify-center">
+                                <canvas id="serviceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Inbox -->
+                <div id="tab-inbox" class="space-y-6 hidden fade-in">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h1 class="text-3xl font-cinzel text-white">Lead Inbox</h1>
+                            <p class="text-gray-500 text-sm mt-1">Manage and respond to client inquiries.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <input type="text" id="search-leads" placeholder="Search..." class="bg-white/5 border border-white/10 rounded-sm px-4 py-2 text-sm text-white focus:outline-none focus:border-lavate-gold w-48">
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-white/5 border-b border-white/5 text-xs text-gray-400 uppercase tracking-widest">
+                                        <th class="p-4 font-bold">Status</th>
+                                        <th class="p-4 font-bold">Client Name</th>
+                                        <th class="p-4 font-bold">Service</th>
+                                        <th class="p-4 font-bold">Contact Info</th>
+                                        <th class="p-4 font-bold">Message Preview</th>
+                                        <th class="p-4 font-bold">Date</th>
+                                        <th class="p-4 font-bold text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leads-table-body" class="text-sm text-gray-300 divide-y divide-white/5">
+                                    <!-- Dynamic Content -->
+                                    <tr>
+                                        <td colspan="7" class="p-8 text-center text-gray-500">
+                                            <i class="fas fa-circle-notch fa-spin mr-2"></i> Loading data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="pagination" class="p-4 border-t border-white/5 flex justify-end gap-2 text-xs">
+                            <!-- Pagination if needed -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Portfolio -->
+                <div id="tab-portfolio" class="space-y-6 hidden fade-in">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h1 class="text-3xl font-cinzel text-white">Portfolio Manager</h1>
+                            <p class="text-gray-500 text-sm mt-1">Add and manage client case studies.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Add Form -->
+                        <div class="glass-panel p-6 rounded-sm h-fit">
+                            <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                                <h3 class="text-lg font-bold text-white" id="pf-form-title">Add New Project</h3>
+                                <button onclick="resetPortfolioForm()" class="text-xs text-gray-500 hover:text-white hidden" id="pf-reset-btn">Cancel Edit</button>
+                            </div>
+                            <form id="portfolio-form" class="space-y-4">
+                                <input type="hidden" id="pf-id"> <!-- Hidden ID for edits -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Project Title</label>
+                                    <input type="text" id="pf-title" required class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-sm focus:border-lavate-gold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Client Name</label>
+                                    <input type="text" id="pf-client" required class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-sm focus:border-lavate-gold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Category</label>
+                                    <select id="pf-category" required class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-sm focus:border-lavate-gold focus:outline-none">
+                                        <option value="Brand Identity">Brand Identity</option>
+                                        <option value="Web Development">Web Development</option>
+                                        <option value="Growth Strategy">Growth Strategy</option>
+                                        <option value="Content Production">Content Production</option>
+                                        <option value="Social Media">Social Media</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Media Type</label>
+                                    <select id="pf-type" class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-sm focus:border-lavate-gold focus:outline-none">
+                                        <option value="image">Image</option>
+                                        <option value="video">Video</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Media URL</label>
+                                    <input type="url" id="pf-url" required placeholder="https://..." class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-sm focus:border-lavate-gold focus:outline-none">
+                                    <p class="text-[10px] text-gray-600 mt-1">Direct link to image or video file.</p>
+                                </div>
+                                
+                                <button type="submit" id="pf-submit-btn" class="w-full py-3 bg-white/10 text-white font-bold uppercase tracking-widest text-xs hover:bg-lavate-gold hover:text-black transition-colors rounded-sm mt-4">
+                                    Upload Project
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- List Area -->
+                        <div class="lg:col-span-2 space-y-4">
+                            <h3 class="text-lg font-bold text-white mb-2">Current Items</h3>
+                            <div id="portfolio-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[600px] overflow-y-auto pr-2">
+                                <!-- Dynamic Items -->
+                                <div class="text-gray-500 text-sm italic">Loading portfolio...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, get, child, remove, push, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDOpLVhrKfszf6pRC7QZ_KCFB3FMDJ19uk",
+            authDomain: "lavate-media.firebaseapp.com",
+            databaseURL: "https://lavate-media-default-rtdb.firebaseio.com",
+            projectId: "lavate-media",
+            storageBucket: "lavate-media.firebasestorage.app",
+            messagingSenderId: "1026315044228",
+            appId: "1:1026315044228:web:ff568f60cf51d59fcd49d1",
+            measurementId: "G-G7FWHM47VN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // State
+        let currentUser = null;
+        let leadsData = [];
+        let portfolioData = [];
+        let charts = {};
+
+        // DOM Elements
+        const views = {
+            login: document.getElementById('login-view'),
+            dashboard: document.getElementById('dashboard-view')
+        };
+        const tabs = {
+            overview: document.getElementById('tab-overview'),
+            inbox: document.getElementById('tab-inbox'),
+            portfolio: document.getElementById('tab-portfolio')
+        };
+
+        // --- AUTHENTICATION ---
+
+        function checkSession() {
+            const sessionUser = getCookie('admin_user');
+            if (sessionUser) {
+                currentUser = sessionUser;
+                showDashboard();
+            }
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('admin-id').value.trim();
+            const pass = document.getElementById('admin-pass').value.trim();
+            const btn = document.getElementById('login-btn');
+
+            if (!id || !pass) {
+                showToast('Please enter both ID and Password', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="spinner"></div>';
+            
+            try {
+                // Correct Login Algorithm: Search all admins for matching ID
+                const dbRef = ref(db);
+                const snapshot = await get(child(dbRef, 'Admins'));
+
+                let found = false;
+                if (snapshot.exists()) {
+                    const admins = snapshot.val();
+                    for (const key in admins) {
+                        const admin = admins[key];
+                        // Check if ID matches inside the object
+                        if (admin.id === id) {
+                            if (admin.pass === pass) {
+                                found = true;
+                                currentUser = id; // Or use key if preferred
+                                setCookie('admin_user', id, 7);
+                                showToast('Welcome back, ' + id, 'success');
+                                showDashboard();
+                            } else {
+                                showToast('Invalid Password', 'error');
+                                found = true; // Found ID, stop searching
+                            }
+                            break;
+                        }
+                    }
+                }
+                
+                if (!found) {
+                    showToast('Admin ID not found', 'error');
+                }
+
+            } catch (error) {
+                console.error(error);
+                showToast('Connection Error', 'error');
+            } finally {
+                btn.innerHTML = '<span>Authenticate</span><i class="fas fa-arrow-right"></i>';
+            }
+        });
+
+        window.logout = function() {
+            setCookie('admin_user', '', -1);
+            window.location.reload();
+        }
+
+        function showDashboard() {
+            views.login.classList.add('hidden');
+            views.dashboard.classList.remove('hidden');
+            document.getElementById('admin-name-display').textContent = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
+            document.getElementById('admin-avatar').textContent = currentUser.charAt(0).toUpperCase();
+            initDashboard();
+            initPortfolio();
+        }
+
+        // --- DASHBOARD LOGIC ---
+
+        function initDashboard() {
+            const leadsRef = ref(db, 'contacts');
+            
+            onValue(leadsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    leadsData = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    })).reverse();
+                    
+                    leadsData.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+
+                    updateStats();
+                    renderCharts();
+                    renderTable();
+                } else {
+                    leadsData = [];
+                    renderTable();
+                }
+            });
+        }
+
+        function updateStats() {
+            const total = leadsData.length;
+            
+            // Calc This Month
+            const now = new Date();
+            const thisMonth = leadsData.filter(l => {
+                const d = new Date(l.timestamp);
+                return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            }).length;
+
+            animateValue('stat-total', total);
+            animateValue('stat-month', thisMonth);
+
+            // Dynamic Service Stats Cards
+            const serviceCounts = {};
+            leadsData.forEach(l => {
+                const s = l.service || 'Other';
+                serviceCounts[s] = (serviceCounts[s] || 0) + 1;
+            });
+
+            const statsGrid = document.getElementById('stats-grid');
+            // Keep first two static children (Total, Month) and clear rest
+            while(statsGrid.children.length > 2) {
+                statsGrid.removeChild(statsGrid.lastChild);
+            }
+
+            // Generate card for each service
+            const colors = ['bg-lavate-rose', 'bg-lavate-blue', 'bg-purple-500', 'bg-orange-500'];
+            let colorIdx = 0;
+
+            for (const [service, count] of Object.entries(serviceCounts)) {
+                const colorClass = colors[colorIdx % colors.length];
+                colorIdx++;
+                
+                const card = document.createElement('div');
+                card.className = 'glass-panel p-6 rounded-sm relative overflow-hidden group fade-in';
+                card.innerHTML = `
+                    <div class="absolute -right-4 -top-4 w-20 h-20 ${colorClass}/10 rounded-full group-hover:${colorClass}/20 transition-colors"></div>
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">${service}</p>
+                    <h3 class="text-3xl font-cinzel text-white">${count}</h3>
+                `;
+                statsGrid.appendChild(card);
+            }
+        }
+
+        function renderCharts() {
+            const services = {};
+            leadsData.forEach(l => {
+                const s = l.service || 'Other';
+                services[s] = (services[s] || 0) + 1;
+            });
+
+            const ctxPie = document.getElementById('serviceChart').getContext('2d');
+            if (charts.pie) charts.pie.destroy();
+
+            charts.pie = new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(services),
+                    datasets: [{
+                        data: Object.values(services),
+                        backgroundColor: ['#E7A349', '#C36F86', '#5459AB', '#FFFFFF', '#333333'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#9CA3AF', font: { family: 'Inter', size: 10 } } }
+                    }
+                }
+            });
+
+            const days = {};
+            leadsData.forEach(l => {
+                if(!l.timestamp) return;
+                const date = new Date(l.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                days[date] = (days[date] || 0) + 1;
+            });
+            const labels = Object.keys(days).reverse();
+            const dataPoints = Object.values(days).reverse();
+
+            const ctxLine = document.getElementById('growthChart').getContext('2d');
+            if (charts.line) charts.line.destroy();
+
+            charts.line = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'New Leads',
+                        data: dataPoints,
+                        borderColor: '#E7A349',
+                        backgroundColor: 'rgba(231, 163, 73, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
+                        x: { grid: { display: false }, ticks: { color: '#666' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('leads-table-body');
+            const search = document.getElementById('search-leads').value.toLowerCase();
+            
+            tbody.innerHTML = '';
+
+            const filtered = leadsData.filter(l => 
+                (l.name && l.name.toLowerCase().includes(search)) || 
+                (l.email && l.email.toLowerCase().includes(search))
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-gray-500">No leads found.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(lead => {
+                const date = lead.timestamp ? new Date(lead.timestamp).toLocaleDateString() : 'N/A';
+                const status = lead.status || 'New';
+                
+                // Status Color
+                let statusColor = 'bg-blue-500/20 text-blue-400';
+                if(status === 'Contacted') statusColor = 'bg-yellow-500/20 text-yellow-400';
+                if(status === 'Closed') statusColor = 'bg-green-500/20 text-green-400';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-white/5 transition-colors border-b border-white/5 last:border-0';
+                tr.innerHTML = `
+                    <td class="p-4">
+                        <select onchange="updateStatus('${lead.id}', this.value)" class="bg-transparent border border-white/10 rounded px-2 py-1 text-xs outline-none ${statusColor}">
+                            <option value="New" class="bg-lavate-black text-gray-300" ${status === 'New' ? 'selected' : ''}>New</option>
+                            <option value="Contacted" class="bg-lavate-black text-gray-300" ${status === 'Contacted' ? 'selected' : ''}>Contacted</option>
+                            <option value="Closed" class="bg-lavate-black text-gray-300" ${status === 'Closed' ? 'selected' : ''}>Closed</option>
+                        </select>
+                    </td>
+                    <td class="p-4 font-bold text-white">${lead.name || 'Unknown'}</td>
+                    <td class="p-4"><span class="px-2 py-1 bg-white/10 rounded text-[10px] uppercase tracking-wider">${lead.service || 'General'}</span></td>
+                    <td class="p-4">
+                        <div class="flex flex-col text-xs text-gray-400">
+                            <span>${lead.email}</span>
+                            <span>${lead.phone}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-gray-400 truncate max-w-xs" title="${lead.message}">${lead.message || '-'}</td>
+                    <td class="p-4 text-xs text-gray-500">${date}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="openEmailModal('${lead.email}', '${lead.name}')" class="text-lavate-gold hover:text-white mr-3 transition-colors" title="Reply">
+                            <i class="fas fa-reply"></i>
+                        </button>
+                        <button onclick="deleteLead('${lead.id}')" class="text-gray-600 hover:text-red-500 transition-colors" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- GLOBAL FUNCTIONS (Window Scope) ---
+
+        window.updateStatus = async function(id, newStatus) {
+            try {
+                await update(ref(db, `contacts/${id}`), { status: newStatus });
+                showToast(`Status updated to ${newStatus}`, 'success');
+            } catch (e) {
+                showToast('Error updating status', 'error');
+            }
+        };
+
+        window.openEmailModal = function(email, name) {
+            const modal = document.getElementById('email-modal');
+            document.getElementById('email-to').value = email;
+            document.getElementById('email-to-display').value = `${name} <${email}>`;
+            
+            // Pre-fill nice body
+            const body = `Hi ${name},\n\nThank you for contacting Lavate Media regarding your inquiry.\n\n[Your Message Here]\n\nBest regards,\nLavate Media Team`;
+            document.getElementById('email-body').value = body;
+            
+            modal.classList.remove('hidden');
+        };
+
+        window.closeEmailModal = function() {
+            document.getElementById('email-modal').classList.add('hidden');
+        };
+
+        document.getElementById('email-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const to = document.getElementById('email-to').value;
+            const subject = document.getElementById('email-subject').value;
+            const body = document.getElementById('email-body').value;
+            
+            const mailtoLink = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+            closeEmailModal();
+        });
+
+        // --- PORTFOLIO LOGIC ---
+
+        function initPortfolio() {
+            const pfRef = ref(db, 'portfolio');
+            
+            onValue(pfRef, (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('portfolio-list');
+                container.innerHTML = '';
+
+                if (data) {
+                    portfolioData = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                    
+                    portfolioData.forEach(item => {
+                        const mediaEl = item.type === 'video' 
+                            ? `<i class="fas fa-video text-lavate-rose text-2xl"></i>` 
+                            : `<img src="${item.url}" class="w-full h-full object-cover opacity-60">`;
+
+                        const div = document.createElement('div');
+                        div.className = 'glass-panel rounded-sm overflow-hidden flex relative group';
+                        div.innerHTML = `
+                            <div class="w-24 h-24 bg-black flex items-center justify-center relative border-r border-white/10">
+                                ${mediaEl}
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col justify-center">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <span class="text-[10px] text-lavate-gold uppercase tracking-widest">${item.category}</span>
+                                        <h4 class="text-white font-bold">${item.title}</h4>
+                                        <p class="text-xs text-gray-500">${item.client}</p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button onclick="editPortfolioItem('${item.id}')" class="text-gray-600 hover:text-lavate-gold transition-colors" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deletePortfolioItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <a href="${item.url}" target="_blank" class="text-[10px] text-gray-400 hover:text-white mt-2 truncate w-48 block">
+                                    <i class="fas fa-link mr-1"></i> ${item.url}
+                                </a>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                } else {
+                    container.innerHTML = '<div class="text-gray-500 text-sm italic col-span-full">No portfolio items found.</div>';
+                }
+            });
+        }
+
+        window.editPortfolioItem = function(id) {
+            const item = portfolioData.find(i => i.id === id);
+            if (!item) return;
+
+            // Populate Form
+            document.getElementById('pf-id').value = id;
+            document.getElementById('pf-title').value = item.title;
+            document.getElementById('pf-client').value = item.client;
+            document.getElementById('pf-category').value = item.category;
+            document.getElementById('pf-type').value = item.type;
+            document.getElementById('pf-url').value = item.url;
+
+            // Change UI State
+            document.getElementById('pf-submit-btn').textContent = 'Update Project';
+            document.getElementById('pf-form-title').textContent = 'Edit Project';
+            document.getElementById('pf-reset-btn').classList.remove('hidden');
+            
+            // Scroll to form
+            document.getElementById('portfolio-form').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.resetPortfolioForm = function() {
+            document.getElementById('portfolio-form').reset();
+            document.getElementById('pf-id').value = '';
+            document.getElementById('pf-submit-btn').textContent = 'Upload Project';
+            document.getElementById('pf-form-title').textContent = 'Add New Project';
+            document.getElementById('pf-reset-btn').classList.add('hidden');
+        };
+
+        document.getElementById('portfolio-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('pf-submit-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Processing...';
+
+            const id = document.getElementById('pf-id').value;
+            const newItem = {
+                title: document.getElementById('pf-title').value,
+                client: document.getElementById('pf-client').value,
+                category: document.getElementById('pf-category').value,
+                type: document.getElementById('pf-type').value,
+                url: document.getElementById('pf-url').value,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                if (id) {
+                    // Update
+                    await update(ref(db, `portfolio/${id}`), newItem);
+                    showToast('Project updated successfully', 'success');
+                    resetPortfolioForm();
+                } else {
+                    // Create
+                    await push(ref(db, 'portfolio'), newItem);
+                    showToast('Project added successfully', 'success');
+                    e.target.reset();
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Error saving project', 'error');
+            } finally {
+                btn.textContent = originalText;
+            }
+        });
+
+        window.deletePortfolioItem = async function(id) {
+            if (confirm('Delete this portfolio item?')) {
+                try {
+                    await remove(ref(db, `portfolio/${id}`));
+                    showToast('Item deleted', 'success');
+                } catch (e) {
+                    showToast('Error deleting item', 'error');
+                }
+            }
+        }
+
+        window.deleteLead = async function(id) {
+            if (confirm('Are you sure you want to delete this lead? This cannot be undone.')) {
+                try {
+                    await remove(ref(db, `contacts/${id}`));
+                    showToast('Lead deleted successfully', 'success');
+                } catch (e) {
+                    console.error(e);
+                    showToast('Error deleting lead', 'error');
+                }
+            }
+        };
+
+        window.refreshData = function() {
+            const icon = document.querySelector('.fa-sync-alt');
+            icon.classList.add('fa-spin');
+            setTimeout(() => icon.classList.remove('fa-spin'), 1000);
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                if (btn.innerText.toLowerCase().includes(tabName)) {
+                    btn.classList.add('text-lavate-gold', 'border-lavate-gold', 'bg-white/5');
+                    btn.classList.remove('text-gray-400', 'border-transparent');
+                } else {
+                    btn.classList.remove('text-lavate-gold', 'border-lavate-gold', 'bg-white/5');
+                    btn.classList.add('text-gray-400', 'border-transparent');
+                }
+            });
+
+            Object.keys(tabs).forEach(key => {
+                if (key === tabName) {
+                    tabs[key].classList.remove('hidden');
+                } else {
+                    tabs[key].classList.add('hidden');
+                }
+            });
+        }
+
+        document.getElementById('search-leads').addEventListener('input', renderTable);
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            let expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            const colors = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+            const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+            
+            el.className = `p-4 rounded-sm shadow-lg text-white text-sm font-bold flex items-center gap-3 fade-in ${colors}`;
+            el.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+            
+            container.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
+        }
+
+        function animateValue(id, end) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const duration = 1000;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * end);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        checkSession();
+
+    </script>
+</body>
+</html>
