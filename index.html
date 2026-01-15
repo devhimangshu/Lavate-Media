@@ -229,7 +229,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0; /* Prevents logo collapse */
-            opacity: 0.6;
+            opacity: 1; /* Changed from 0.6 to 1 for original colors visibility */
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -245,12 +245,13 @@
             width: auto;
             max-width: none; /* Prevents squashing */
             object-fit: contain;
-            filter: grayscale(100%);
+            /* Filter removed for original color requirement */
+            filter: none;
             transition: filter 0.3s;
         }
         
         .brand-item:hover .brand-logo {
-            filter: grayscale(0%);
+            filter: none;
         }
 
         /* Pixel Preloader Canvas */
@@ -372,15 +373,15 @@
                     <a href="tel:+917022776211" class="hover-trigger text-white hover:text-lavate-gold text-[11px] font-bold tracking-widest transition-colors">
                         +91 70227 76211
                     </a>
-                    <a href="#contact" class="hover-trigger group relative px-7 py-3 bg-white text-lavate-black overflow-hidden font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors">
-                         <div class="absolute inset-0 w-0 bg-lavate-gold transition-all duration-[400ms] ease-out group-hover:w-full z-0"></div>
-                         <span class="relative z-10">Start Project</span>
+                    <a href="#contact" class="hover-trigger group relative px-7 py-3 bg-white text-lavate-black overflow-hidden font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors"> 
+                        <div class="absolute inset-0 w-0 bg-lavate-gold transition-all duration-[400ms] ease-out group-hover:w-full z-0"></div>
+                        <span class="relative z-10">Start Project</span>
                     </a>
                 </div>
 
                 <!-- Mobile Hamburger & Contact -->
-                <div class="lg:hidden flex items-center gap-5">
-                     <a href="tel:+917022776211" class="text-white text-sm font-bold tracking-widest" aria-label="Call Us">
+                <div class="lg:hidden flex items-center gap-5"> 
+                    <a href="tel:+917022776211" class="text-white text-sm font-bold tracking-widest" aria-label="Call Us">
                         <i class="fas fa-phone-alt"></i>
                     </a>
                     <button id="menu-toggle" class="z-50 p-2 text-white focus:outline-none hover:text-lavate-gold transition-colors" aria-label="Toggle Menu">
@@ -392,7 +393,7 @@
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 z-40 bg-lavate-black transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col justify-center items-center">
+    <div id="mobile-menu" class="fixed inset-0 z-[60] bg-lavate-black transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col justify-center items-center">
         <button id="menu-close" class="absolute top-8 right-8 text-white text-3xl focus:outline-none hover:text-lavate-rose transition-colors" aria-label="Close Menu">
             <i class="fas fa-times"></i>
         </button>
@@ -466,6 +467,7 @@
                 <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
                 <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
                 <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate-netflix.jpg" alt="Netflix" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
             </div>
             
             <!-- Group 2 (Duplicate for Loop) -->
@@ -477,6 +479,7 @@
                 <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- duolingo.jpg" alt="Duolingo" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
                 <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- purplle.jpg" alt="Purplle" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
                 <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate- beco.jpg" alt="Beco" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
+                <div class="brand-item hover-trigger"><img src="https://lavatemedia.in/assets/lavate-netflix.jpg" alt="Netflix" class="brand-logo h-[40px] md:h-[60px]" loading="lazy"></div>
             </div>
         </div>
     </div>
@@ -913,8 +916,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
                 
                 <!-- Col 1 -->
-                <div>
-                     <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media" class="h-10 w-auto mb-8 opacity-80">
+                <div> 
+                    <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media" class="h-10 w-auto mb-8 opacity-80">
                     <p class="text-sm leading-relaxed mb-8">
                         Lavate Media is a professional creative and digital media brand. We represent growth, structure, and confidence.
                     </p>
@@ -924,8 +927,8 @@
                         </a>
                         <a href="https://www.linkedin.com/in/lavate-media-135b243a5" class="hover-trigger w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-blue hover:text-white transition-colors" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
-                        </a> 
-                         <a href="#" class="hover-trigger w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-gold hover:text-white transition-colors" aria-label="Twitter">
+                        </a>  
+                        <a href="#" class="hover-trigger w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-gold hover:text-white transition-colors" aria-label="Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
                     </div>
@@ -1014,8 +1017,7 @@
             }, 800); 
         });
 
-        /**
-         * Optimized Custom Cursor Logic
+        /** * Optimized Custom Cursor Logic
          * Uses Linear Interpolation (Lerp) for smooth following without lag.
          * Runs on requestAnimationFrame for 60fps performance.
          */
@@ -1068,9 +1070,9 @@
         function toggleMenu() {
             mobileMenu.classList.toggle('translate-x-full');
             
-            if (!mobileMenu.classList.contains('translate-x-full')) {
+            if (!mobileMenu.classList.contains('translate-x-full')) { 
                  document.body.style.overflow = 'hidden';
-            } else {
+            } else { 
                  document.body.style.overflow = '';
             }
         }
@@ -1082,8 +1084,7 @@
             link.addEventListener('click', toggleMenu);
         });
 
-        /**
-         * Optimized Navbar Scroll Effect
+        /** * Optimized Navbar Scroll Effect
          * Uses a flag to prevent layout thrashing on every pixel scroll
          */
         const nav = document.getElementById('navbar');
