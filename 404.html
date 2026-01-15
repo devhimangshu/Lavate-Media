@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Page Not Found | Lavate Media</title>
+    <meta name="theme-color" content="#0A090C">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://lavatemedia.in/assets/lavate-logo.png">
@@ -30,9 +31,6 @@
                             gold: '#E7A349',
                             blue: '#5459AB',
                             rose: '#C36F86',
-                            bronze: '#8D5442',
-                            softGold: '#EDD5A6',
-                            light: '#F8F8FA',
                             dark: '#121214'
                         }
                     },
@@ -42,7 +40,21 @@
                     },
                     backgroundImage: {
                         'brand-gradient': 'linear-gradient(135deg, #E7A349, #C36F86, #5459AB)',
-                        'brand-gradient-dark': 'linear-gradient(135deg, rgba(231, 163, 73, 0.2), rgba(195, 111, 134, 0.2), rgba(84, 89, 171, 0.2))',
+                    },
+                    animation: {
+                        'glitch': 'glitch 1s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        glitch: {
+                            '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                            '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                            '62%': { transform: 'translate(0,0) skew(5deg)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
                     }
                 }
             }
@@ -50,269 +62,109 @@
     </script>
 
     <style>
-        /* Base Styles */
         body {
-            background-color: #F8F8FA;
-            color: #0A090C;
+            background-color: #0A090C;
+            color: #F8F8FA;
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            /* Hide cursor on desktop */
-            @media (min-width: 768px) {
-                cursor: none;
-            }
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Cinzel', serif;
+            overflow: hidden; /* Prevent scroll on 404 */
         }
 
         /* Custom Cursor */
-        .cursor-dot,
-        .cursor-outline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            pointer-events: none;
-            display: none;
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999;
+            pointer-events: none; transform: translate(-50%, -50%); display: none;
+            will-change: transform;
         }
-        @media (min-width: 768px) {
-            .cursor-dot, .cursor-outline {
-                display: block;
-            }
+        @media (min-width: 1024px) { 
+            body { cursor: none; }
+            a, button { cursor: none; }
+            .cursor-dot, .cursor-outline { display: block; } 
         }
-        
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #E7A349;
-        }
-        .cursor-outline {
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(10, 9, 12, 0.5);
-            transition: width 0.1s, height 0.1s, background-color 0.2s;
-        }
-        
-        /* Hover State for Cursor */
-        body:hover .cursor-outline {
-            border-color: #E7A349;
-        }
-        a:hover ~ .cursor-outline, button:hover ~ .cursor-outline {
-            transform: scale(1.5);
-            background-color: rgba(231, 163, 73, 0.1);
-        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #E7A349; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(231, 163, 73, 0.3); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        body.hovering .cursor-outline { width: 60px; height: 60px; border-color: #E7A349; background-color: rgba(231, 163, 73, 0.05); backdrop-filter: blur(2px); }
+        body.hovering .cursor-dot { opacity: 0; }
 
-        /* Utilities */
-        .text-gradient {
-            background: linear-gradient(135deg, #E7A349, #C36F86, #5459AB);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Glitch Text Effect */
+        .glitch-wrapper { position: relative; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
-
-        /* Custom SVG Animation Keyframes */
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
+        .glitch-text::before {
+            left: 2px; text-shadow: -1px 0 #C36F86; clip: rect(44px, 450px, 56px, 0);
+            animation: glitch 5s infinite linear alternate-reverse;
         }
-        @keyframes drift {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(10px); }
+        .glitch-text::after {
+            left: -2px; text-shadow: -1px 0 #5459AB; clip: rect(44px, 450px, 56px, 0);
+            animation: glitch 5s infinite linear alternate-reverse;
         }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        @keyframes limb-move {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(10deg); }
-        }
-
-        .astronaut-group {
-            animation: float 6s ease-in-out infinite;
-        }
-        .astronaut-arm {
-            transform-origin: center top;
-            animation: limb-move 4s ease-in-out infinite;
-        }
-        .star {
-            animation: twinkle 3s ease-in-out infinite;
-        }
-        .star:nth-child(2n) { animation-delay: 1s; }
-        .star:nth-child(3n) { animation-delay: 2s; }
     </style>
 </head>
-<body class="antialiased selection:bg-lavate-gold selection:text-black flex flex-col min-h-screen">
+<body class="h-screen w-full flex flex-col items-center justify-center relative">
 
-    <!-- Custom Cursor Elements -->
+    <!-- Custom Cursor -->
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-lavate-black/95 backdrop-blur-md border-b border-white/5" id="navbar">
-        <div class="max-w-[1600px] mx-auto px-6 lg:px-12">
-            <div class="flex justify-between items-center h-24">
-                
-                <!-- Logo -->
-                <a href="index.html" class="flex-shrink-0 z-50 group">
-                    <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media" class="h-12 w-auto object-contain transition-transform group-hover:scale-105"> 
-                </a>
+    <!-- Background Elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-lavate-gold/5 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-lavate-blue/5 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
-                    <a href="index.html#about" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-gold transition-colors py-2">About</a>
-                    <a href="index.html#services" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-rose transition-colors py-2">Services</a>
-                    <a href="index.html#work" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-lavate-blue transition-colors py-2">Work</a>
-                    <a href="index.html#reviews" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2">Reviews</a>
-                    <a href="index.html#faq" class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors py-2">FAQ</a>
-                </div>
-
-                <!-- Right Action -->
-                <div class="hidden lg:flex items-center gap-6">
-                    <a href="tel:+917022776211" class="text-white hover:text-lavate-gold text-xs font-bold tracking-widest transition-colors">
-                        +91 70227 76211
-                    </a>
-                    <a href="index.html#contact" class="group relative px-6 py-2 bg-white text-lavate-black overflow-hidden font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">
-                         <div class="absolute inset-0 w-0 bg-lavate-gold transition-all duration-[250ms] ease-out group-hover:w-full z-0"></div>
-                         <span class="relative z-10">Start Project</span>
-                    </a>
-                </div>
-
-                <!-- Mobile Hamburger (Visual only for 404) -->
-                <div class="lg:hidden flex items-center gap-4">
-                     <a href="tel:+917022776211" class="text-white text-xs font-bold tracking-widest">
-                        <i class="fas fa-phone-alt"></i>
-                    </a>
-                    <button class="z-50 p-2 text-white focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
-                </div>
-            </div>
+    <!-- Content -->
+    <div class="text-center relative z-10 px-6">
+        <div class="glitch-wrapper mb-4">
+            <h1 class="text-[120px] md:text-[200px] font-cinzel font-bold leading-none text-transparent bg-clip-text bg-gradient-to-r from-lavate-gold via-lavate-rose to-lavate-blue glitch-text opacity-90" data-text="404">
+                404
+            </h1>
         </div>
-    </nav>
-
-    <!-- Main 404 Content -->
-    <main class="flex-grow flex items-center justify-center bg-lavate-light relative pt-32 pb-20 px-6">
-        <!-- Abstract Background -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-lavate-gold/10 rounded-full blur-[100px]"></div>
-            <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-lavate-blue/10 rounded-full blur-[100px]"></div>
-        </div>
-
-        <div class="text-center relative z-10 max-w-2xl mx-auto">
-            
-            <!-- Custom Code Animation: Lost Astronaut -->
-            <div class="w-full max-w-[400px] mx-auto mb-8 relative">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
-                    <!-- Background Stars -->
-                    <circle cx="50" cy="50" r="2" fill="#E7A349" class="star" />
-                    <circle cx="350" cy="80" r="2" fill="#C36F86" class="star" />
-                    <circle cx="200" cy="20" r="1.5" fill="#5459AB" class="star" />
-                    <circle cx="100" cy="250" r="2" fill="#8D5442" class="star" />
-                    <circle cx="300" cy="220" r="1.5" fill="#EDD5A6" class="star" />
-                    
-                    <!-- Astronaut Group -->
-                    <g class="astronaut-group">
-                        <!-- Backpack -->
-                        <rect x="160" y="110" width="80" height="100" rx="15" fill="#e0e0e0" />
-                        <!-- Legs -->
-                        <path d="M175 200 L170 260" stroke="#f0f0f0" stroke-width="20" stroke-linecap="round" />
-                        <path d="M225 200 L230 260" stroke="#f0f0f0" stroke-width="20" stroke-linecap="round" />
-                        <!-- Body -->
-                        <rect x="165" y="100" width="70" height="110" rx="20" fill="#ffffff" />
-                        <!-- Arms -->
-                        <path d="M165 130 L130 160" stroke="#ffffff" stroke-width="18" stroke-linecap="round" class="astronaut-arm" />
-                        <path d="M235 130 L270 160" stroke="#ffffff" stroke-width="18" stroke-linecap="round" class="astronaut-arm" />
-                        <!-- Head/Helmet -->
-                        <circle cx="200" cy="90" r="35" fill="#ffffff" />
-                        <!-- Visor -->
-                        <path d="M180 80 Q200 110 220 80 T180 80" fill="url(#visorGradient)" />
-                        <!-- Detail Lines -->
-                        <rect x="185" y="140" width="30" height="40" rx="5" fill="#E7A349" opacity="0.2" />
-                    </g>
-                    
-                    <!-- Gradient Definitions -->
-                    <defs>
-                        <linearGradient id="visorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#0A090C;stop-opacity:1" />
-                            <stop offset="50%" style="stop-color:#5459AB;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0A090C;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-
-            <h1 class="text-6xl md:text-9xl font-cinzel text-lavate-black mb-4 tracking-tighter">404</h1>
-            <h2 class="text-2xl md:text-3xl font-cinzel text-gray-500 mb-6">Lost in the Digital Void?</h2>
-            
-            <p class="text-gray-600 mb-10 leading-relaxed max-w-md mx-auto">
-                The page you are looking for seems to have drifted off into deep space. Don't worry, even the best explorers get lost sometimes.
-            </p>
-
-            <a href="index.html" class="inline-block px-10 py-4 bg-lavate-black text-white font-bold uppercase tracking-widest text-xs hover:bg-lavate-gold hover:text-black transition-all shadow-lg transform hover:-translate-y-1">
-                Return to Home
-            </a>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-lavate-black text-gray-400 pt-24 pb-12 px-6 lg:px-12 border-t border-white/5">
-        <div class="max-w-[1600px] mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
-                <!-- Col 1 -->
-                <div>
-                     <img src="https://lavatemedia.in/assets/lavate-logo.png" alt="Lavate Media" class="h-10 w-auto mb-8 opacity-80">
-                    <p class="text-sm leading-relaxed mb-8">
-                        Lavate Media is a professional creative and digital media brand. We represent growth, structure, and confidence.
-                    </p>
-                    <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-rose hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-blue hover:text-white transition-colors"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-lavate-gold hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
-                    </div>
-                </div>
-                <!-- Links (Simplified for 404) -->
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest mb-8 text-xs">Menu</h4>
-                    <ul class="space-y-4 text-sm">
-                        <li><a href="index.html" class="hover:text-lavate-gold transition-colors">Home</a></li>
-                        <li><a href="index.html#services" class="hover:text-lavate-gold transition-colors">Services</a></li>
-                        <li><a href="index.html#contact" class="hover:text-lavate-gold transition-colors">Contact</a></li>
-                    </ul>
-                </div>
-                <!-- Contact -->
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest mb-8 text-xs">Contact</h4>
-                    <ul class="space-y-4 text-sm">
-                        <li class="flex items-center gap-3"><i class="fas fa-phone text-lavate-gold"></i> <a href="tel:+917022776211" class="hover:text-white">+91 70227 76211</a></li>
-                        <li class="flex items-center gap-3"><i class="fas fa-envelope text-lavate-gold"></i> <a href="mailto:contact@lavatemedia.com" class="hover:text-white">contact@lavatemedia.com</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs tracking-widest uppercase">
-                <p>&copy; 2026 Lavate Media. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Custom Cursor Script -->
-    <script>
-        const dot = document.getElementById('cursor-dot');
-        const outline = document.getElementById('cursor-outline');
         
-        window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
+        <h2 class="text-2xl md:text-4xl font-cinzel text-white mb-6">Lost in the Digital Void</h2>
+        
+        <p class="text-gray-500 text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed">
+            The page you are looking for has been moved, deleted, or never existed. Let's get you back on track.
+        </p>
+
+        <a href="https://lavatemedia.in/" class="hover-trigger inline-flex items-center gap-3 px-8 py-4 border border-white/20 text-white font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm group">
+            <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+            Return to Home
+        </a>
+    </div>
+
+    <!-- Footer Copyright -->
+    <div class="absolute bottom-8 text-center w-full">
+        <p class="text-[10px] text-gray-700 uppercase tracking-widest">&copy; 2026 Lavate Media</p>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Desktop Custom Cursor
+        const isDesktop = window.matchMedia('(min-width: 1024px)');
+        if (isDesktop.matches) {
+            const dot = document.getElementById('cursor-dot');
+            const outline = document.getElementById('cursor-outline');
+            let mouseX = 0, mouseY = 0, outX = 0, outY = 0;
             
-            dot.style.left = `${posX}px`;
-            dot.style.top = `${posY}px`;
+            window.addEventListener('mousemove', (e) => { 
+                mouseX = e.clientX; 
+                mouseY = e.clientY; 
+                dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`; 
+            });
             
-            outline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+            function animateCursor() {
+                outX += (mouseX - outX) * 0.15; 
+                outY += (mouseY - outY) * 0.15;
+                outline.style.transform = `translate(${outX}px, ${outY}px) translate(-50%, -50%)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+
+        // Hover Effect
+        document.querySelectorAll('.hover-trigger').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
     </script>
 </body>
