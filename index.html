@@ -318,6 +318,11 @@
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4);
         }
+        
+        /* Modal Styles */
+        .modal-open {
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-lavate-gold selection:text-black">
@@ -327,6 +332,78 @@
         <div class="text-center relative">
             <h1 class="text-white font-cinzel text-3xl tracking-[0.5em] mb-6 animate-pulse">LAVATE</h1>
             <div class="loader-line mx-auto"></div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-lavate-dark border border-lavate-gold/20 p-8 md:p-12 max-w-lg w-full relative rounded-sm shadow-2xl transform scale-95 transition-transform duration-300 mx-4" id="modal-content">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <!-- Form Container -->
+            <div id="form-container">
+                <div class="text-center mb-8">
+                    <span class="text-lavate-gold text-xs font-bold tracking-[0.25em] uppercase block mb-2">Get Started</span>
+                    <h2 class="text-3xl font-cinzel text-white">Start Your Project</h2>
+                </div>
+                
+                <form id="project-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <input type="text" id="name" required class="w-full bg-white/5 border-b border-white/20 py-3 text-white placeholder-transparent focus:outline-none focus:border-lavate-gold transition-colors peer" placeholder="Name">
+                            <label for="name" class="absolute left-0 -top-3.5 text-gray-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-lavate-gold peer-focus:text-xs">Name</label>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="phone" required class="w-full bg-white/5 border-b border-white/20 py-3 text-white placeholder-transparent focus:outline-none focus:border-lavate-gold transition-colors peer" placeholder="Phone">
+                            <label for="phone" class="absolute left-0 -top-3.5 text-gray-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-lavate-gold peer-focus:text-xs">Phone</label>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="email" id="email" required class="w-full bg-white/5 border-b border-white/20 py-3 text-white placeholder-transparent focus:outline-none focus:border-lavate-gold transition-colors peer" placeholder="Email">
+                        <label for="email" class="absolute left-0 -top-3.5 text-gray-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-lavate-gold peer-focus:text-xs">Email</label>
+                    </div>
+
+                    <div class="relative">
+                        <select id="service" class="w-full bg-transparent border-b border-white/20 py-3 text-white focus:outline-none focus:border-lavate-gold transition-colors appearance-none">
+                            <option value="" disabled selected class="text-gray-500">Select Service Interest</option>
+                            <option value="Branding" class="text-black">Brand Identity</option>
+                            <option value="Web Dev" class="text-black">Web Development</option>
+                            <option value="Marketing" class="text-black">Growth Strategy</option>
+                            <option value="Content" class="text-black">Content Production</option>
+                            <option value="Other" class="text-black">Other</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-0 top-4 text-gray-500 text-xs pointer-events-none"></i>
+                    </div>
+                    
+                    <div class="relative">
+                        <textarea id="message" rows="3" required class="w-full bg-white/5 border-b border-white/20 py-3 text-white placeholder-transparent focus:outline-none focus:border-lavate-gold transition-colors peer" placeholder="Message"></textarea>
+                        <label for="message" class="absolute left-0 -top-3.5 text-gray-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-lavate-gold peer-focus:text-xs">Tell us about your project</label>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-4 bg-brand-gradient text-white font-bold uppercase tracking-widest text-xs hover:shadow-lg hover:shadow-lavate-gold/20 transition-all rounded-sm mt-4 flex justify-center items-center gap-2 group">
+                        <span id="btn-text">Submit Request</span>
+                        <i id="btn-icon" class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        <i id="btn-loader" class="fas fa-circle-notch fa-spin hidden"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" class="hidden text-center py-12">
+                <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-green-500 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-cinzel text-white mb-4">Request Submitted</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                    Thank you for choosing Lavate Media. <br>Our team will review your requirements and reach out to you shortly.
+                </p>
+                <button id="close-success" class="px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all rounded-sm">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 
@@ -373,7 +450,7 @@
                     <a href="tel:+917022776211" class="hover-trigger text-white hover:text-lavate-gold text-[11px] font-bold tracking-widest transition-colors">
                         +91 70227 76211
                     </a>
-                    <a href="#contact" class="hover-trigger group relative px-7 py-3 bg-white text-lavate-black overflow-hidden font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors"> 
+                    <a href="javascript:void(0)" class="start-project-btn hover-trigger group relative px-7 py-3 bg-white text-lavate-black overflow-hidden font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors"> 
                         <div class="absolute inset-0 w-0 bg-lavate-gold transition-all duration-[400ms] ease-out group-hover:w-full z-0"></div>
                         <span class="relative z-10">Start Project</span>
                     </a>
@@ -402,7 +479,8 @@
             <a href="#services" class="text-3xl font-cinzel text-white hover:text-lavate-rose mobile-link transition-colors">Services</a>
             <a href="#work" class="text-3xl font-cinzel text-white hover:text-lavate-blue mobile-link transition-colors">Work</a>
             <a href="#reviews" class="text-3xl font-cinzel text-white hover:text-lavate-gold mobile-link transition-colors">Reviews</a>
-            <a href="#contact" class="text-3xl font-cinzel text-lavate-gold mobile-link transition-colors">Contact</a>
+            <!-- Linked Mobile Contact to Modal -->
+            <a href="javascript:void(0)" class="text-3xl font-cinzel text-lavate-gold mobile-link start-project-btn transition-colors">Contact</a>
             <a href="tel:+917022776211" class="text-xl font-inter text-white mt-8 border-t border-white/20 pt-8">+91 70227 76211</a>
         </div>
     </div>
@@ -650,48 +728,26 @@
         </div>
     </section>
 
-    <!-- Work Section -->
+    <!-- Work Section (Modified for Dynamic Firebase Content) -->
     <section id="work" class="py-24 bg-lavate-black text-white px-6 lg:px-12">
         <div class="max-w-[1600px] mx-auto">
             <div class="flex justify-between items-center mb-16 border-b border-white/10 pb-6">
                 <h2 class="text-3xl md:text-4xl font-cinzel">Selected Works</h2>
-                <a href="#" class="hover-trigger hidden md:inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
+                <a href="http://lavatemedia.in/portfolio" class="hover-trigger hidden md:inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
                     View Full Portfolio
                 </a>
             </div>
 
-            <!-- Portfolio Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Project 1 -->
-                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none" data-aos="fade-up">
-                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Apex Financial Branding" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100" loading="lazy">
-                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
-                        <span class="text-lavate-gold text-[10px] font-bold uppercase tracking-widest block mb-1">Branding</span>
-                        <h3 class="text-xl font-cinzel">Apex Financial</h3>
-                    </div>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none" data-aos="fade-up" data-aos-delay="100">
-                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Velvet Interiors Social Media" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100" loading="lazy">
-                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
-                        <span class="text-lavate-rose text-[10px] font-bold uppercase tracking-widest block mb-1">Social Media</span>
-                        <h3 class="text-xl font-cinzel">Velvet Interiors</h3>
-                    </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none" data-aos="fade-up" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="TechNova Web Development" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100" loading="lazy">
-                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
-                        <span class="text-lavate-blue text-[10px] font-bold uppercase tracking-widest block mb-1">Web Dev</span>
-                        <h3 class="text-xl font-cinzel">TechNova</h3>
-                    </div>
-                </div>
+            <!-- Portfolio Grid Container (Content Injected by JS) -->
+            <div id="home-portfolio-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Fallback Skeleton / Static Items (Will be replaced by JS) -->
+                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none h-80 bg-white/5 animate-pulse"></div>
+                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none h-80 bg-white/5 animate-pulse delay-100"></div>
+                <div class="hover-trigger group relative overflow-hidden rounded-sm cursor-none h-80 bg-white/5 animate-pulse delay-200"></div>
             </div>
             
             <div class="mt-12 text-center md:hidden">
-                <a href="#" class="inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
+                <a href="http://lavatemedia.in/portfolio" class="inline-block px-8 py-3 border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
                     View Full Portfolio
                 </a>
             </div>
@@ -754,7 +810,7 @@
 
                     <!-- Details Box: Visible on Mobile, Hover on Desktop -->
                     <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 transform translate-y-0 lg:translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-500">
-                        <span class="inline-block px-3 py-1 mb-4 border border-lavate-blue text-lavate-blue text-[10px] font-bold uppercase tracking-widest bg-black/50 backdrop-blur-md rounded-sm">Co-Founder & Marketing</span>
+                        <span class="inline-block px-3 py-1 mb-4 border border-lavate-blue text-white text-[10px] font-bold uppercase tracking-widest bg-black/50 backdrop-blur-md rounded-sm">Co-Founder & Marketing</span>
                         <h3 class="text-4xl font-cinzel text-white mb-4">Sujal C</h3>
                         
                         <!-- Description: Visible on Mobile, Hover on Desktop -->
@@ -912,7 +968,7 @@
             <h2 class="text-5xl md:text-7xl font-cinzel mb-8">Ready to Elevate?</h2>
             <p class="text-xl text-white/90 font-light mb-12">Stop blending in. Start standing out.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#contact" class="hover-trigger px-12 py-5 bg-white text-lavate-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-xl rounded-sm">
+                <a href="javascript:void(0)" class="start-project-btn hover-trigger px-12 py-5 bg-white text-lavate-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-xl rounded-sm">
                     Start Project
                 </a>
                 <a href="https://wa.me/917022776211" class="hover-trigger px-12 py-5 border border-white text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm">
@@ -993,8 +1049,8 @@
             <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs tracking-widest uppercase">
                 <p>&copy; 2026 Lavate Media. All Rights Reserved.</p>
                 <div class="flex gap-8 mt-4 md:mt-0">
-                    <a href="#" class="hover-trigger hover:text-white">Privacy Policy</a>
-                    <a href="#" class="hover-trigger hover:text-white">Terms of Service</a>
+                    <a href="http://lavatemedia.in/privacy" class="hover-trigger hover:text-white">Privacy Policy</a>
+                    <a href="http://lavatemedia.in/terms" class="hover-trigger hover:text-white">Terms of Service</a>
                 </div>
             </div>
         </div>
@@ -1145,6 +1201,221 @@
             });
         }
 
+    </script>
+
+    <!-- Firebase & Modal Logic -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDOpLVhrKfszf6pRC7QZ_KCFB3FMDJ19uk",
+            authDomain: "lavate-media.firebaseapp.com",
+            databaseURL: "https://lavate-media-default-rtdb.firebaseio.com",
+            projectId: "lavate-media",
+            storageBucket: "lavate-media.firebasestorage.app",
+            messagingSenderId: "1026315044228",
+            appId: "1:1026315044228:web:ff568f60cf51d59fcd49d1",
+            measurementId: "G-G7FWHM47VN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- FETCH RECENT WORKS LOGIC ---
+        const worksGrid = document.getElementById('home-portfolio-grid');
+        if(worksGrid) {
+            const pfRef = ref(db, 'portfolio');
+            
+            get(pfRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    const items = Object.values(data);
+                    
+                    // Sort Descending by timestamp
+                    items.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                    
+                    // Take top 3
+                    const recent = items.slice(0, 3);
+
+                    // Clear static/loader content
+                    worksGrid.innerHTML = ''; 
+
+                    recent.forEach((item, index) => {
+                        const isVideo = item.type === 'video' || (item.url && item.url.endsWith('.mp4'));
+                        
+                        let mediaHtml;
+                        let contentHtml;
+
+                        if (isVideo) {
+                            // Video with controls, overlay at top, seek to 1s for thumbnail
+                            mediaHtml = `
+                                <video 
+                                    src="${item.url}#t=1" 
+                                    class="w-full h-80 object-cover cursor-auto relative z-10" 
+                                    controls 
+                                    playsinline 
+                                    loop
+                                    onloadedmetadata="this.currentTime=1"
+                                >
+                                    Your browser does not support the video tag.
+                                </video>
+                            `;
+                            contentHtml = `
+                                <div class="absolute top-0 left-0 w-full p-6 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none z-20">
+                                    <span class="text-lavate-gold text-[10px] font-bold uppercase tracking-widest block mb-1">${item.category || 'Portfolio'}</span>
+                                    <h3 class="text-xl font-cinzel text-white">${item.title}</h3>
+                                </div>
+                            `;
+                        } else {
+                            // Image with standard overlay at bottom
+                            mediaHtml = `<img src="${item.url}" alt="${item.title}" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100" loading="lazy">`;
+                            contentHtml = `
+                                <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
+                                    <span class="text-lavate-gold text-[10px] font-bold uppercase tracking-widest block mb-1">${item.category || 'Portfolio'}</span>
+                                    <h3 class="text-xl font-cinzel text-white">${item.title}</h3>
+                                </div>
+                            `;
+                        }
+
+                        // For videos, remove 'cursor-none' and 'hover-trigger' to allow interaction with controls
+                        const containerClasses = isVideo 
+                            ? "group relative overflow-hidden rounded-sm h-80 bg-lavate-black" 
+                            : "hover-trigger group relative overflow-hidden rounded-sm cursor-none h-80";
+
+                        const html = `
+                            <div class="${containerClasses}" data-aos="fade-up" data-aos-delay="${index * 100}">
+                                ${mediaHtml}
+                                ${contentHtml}
+                            </div>
+                        `;
+                        
+                        worksGrid.insertAdjacentHTML('beforeend', html);
+                    });
+                    
+                    // Re-add hover listeners for new elements
+                    addHoverListeners();
+                } else {
+                    // Fallback if no items
+                    worksGrid.innerHTML = '<p class="col-span-full text-center text-gray-500">Portfolio coming soon.</p>';
+                }
+            }).catch((error) => {
+                console.error("Error fetching portfolio:", error);
+            });
+        }
+
+        // Re-usable hover listener function
+        function addHoverListeners() {
+            document.querySelectorAll('.hover-trigger').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+        }
+
+        // --- CONTACT FORM LOGIC ---
+
+        // Modal Elements
+        const modal = document.getElementById('contact-modal');
+        const modalContent = document.getElementById('modal-content');
+        const closeModal = document.getElementById('close-modal');
+        const startBtns = document.querySelectorAll('.start-project-btn');
+        const form = document.getElementById('project-form');
+        const formContainer = document.getElementById('form-container');
+        const successMessage = document.getElementById('success-message');
+        const closeSuccess = document.getElementById('close-success');
+        
+        // Button Elements
+        const btnText = document.getElementById('btn-text');
+        const btnIcon = document.getElementById('btn-icon');
+        const btnLoader = document.getElementById('btn-loader');
+
+        // Functions
+        function openModal() {
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            // Small timeout for transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModalFunc() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                // Reset form state if closed
+                setTimeout(() => {
+                    formContainer.classList.remove('hidden');
+                    successMessage.classList.add('hidden');
+                    form.reset();
+                }, 300);
+            }, 300);
+        }
+
+        // Event Listeners
+        startBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+            });
+        });
+
+        closeModal.addEventListener('click', closeModalFunc);
+        closeSuccess.addEventListener('click', closeModalFunc);
+
+        // Close on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModalFunc();
+            }
+        });
+
+        // Form Submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // UI Loading State
+            btnText.textContent = 'Processing...';
+            btnIcon.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            
+            // Collect Data
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Push to Realtime Database
+                const contactsRef = ref(db, 'contacts');
+                await push(contactsRef, formData);
+
+                // Show Success
+                formContainer.classList.add('hidden');
+                successMessage.classList.remove('hidden');
+                
+            } catch (error) {
+                console.error("Error submitting form: ", error);
+                alert("Something went wrong. Please try again or email us directly.");
+            } finally {
+                // Reset Button
+                btnText.textContent = 'Submit Request';
+                btnIcon.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>
