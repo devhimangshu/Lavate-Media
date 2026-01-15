@@ -1,1 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Lavate Media</title>
+    <meta name="description" content="Selected works and case studies by Lavate Media.">
+    <meta name="theme-color" content="#0A090C">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://lavatemedia.in/assets/lavate-logo.png">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lavate: {
+                            black: '#0A090C',
+                            gold: '#E7A349',
+                            blue: '#5459AB',
+                            rose: '#C36F86',
+                            bronze: '#8D5442',
+                            softGold: '#EDD5A6',
+                            light: '#F8F8FA',
+                            dark: '#121214'
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'brand-gradient': 'linear-gradient(135deg, #E7A349, #C36F86, #5459AB)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles - Copied from Main for Consistency */
+        :root {
+            --cursor-size: 8px;
+            --cursor-outline-size: 40px;
+        }
+
+        body {
+            background-color: #0A090C; /* Dark background for portfolio */
+            color: #F8F8FA;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Hide Default Cursor only on Desktop */
+        @media (min-width: 1024px) {
+            body, a, button, input, textarea, .cursor-pointer {
+                cursor: none;
+            }
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Cinzel', serif; }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999;
+            pointer-events: none; transform: translate(-50%, -50%); display: none;
+            will-change: transform;
+        }
+        @media (min-width: 1024px) { .cursor-dot, .cursor-outline { display: block; } }
+        .cursor-dot { width: var(--cursor-size); height: var(--cursor-size); background-color: #E7A349; }
+        .cursor-outline { width: var(--cursor-outline-size); height: var(--cursor-outline-size); border: 1px solid rgba(231, 163, 73, 0.3); transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s; }
+        body.hovering .cursor-outline { width: 60px; height: 60px; border-color: #E7A349; background-color: rgba(231, 163, 73, 0.05); backdrop-filter: blur(2px); }
+        body.hovering .cursor-dot { opacity: 0; }
+
+        /* Scrollbar */
+        html { scrollbar-width: thin; scrollbar-color: #E7A349 #0A090C; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0A090C; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #E7A349, #C36F86); border-radius: 4px; }
+
+        /* Preloader */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0A090C; z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.6s ease-out, visibility 0.6s;
+        }
+        .loader-line { width: 200px; height: 1px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden; }
+        .loader-line::after {
+            content: ''; position: absolute; top: 0; left: 0; height: 100%; width: 40%;
+            background: #E7A349; animation: load 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px #E7A349;
+        }
+        @keyframes load { 0% { left: -40%; } 50% { left: 40%; width: 60%; } 100% { left: 100%; width: 40%; } }
+
+        /* Filter Button Active State */
+        .filter-btn.active {
+            color: #0A090C;
+            background-color: #E7A349;
+            border-color: #E7A349;
+        }
+
+        /* Portfolio Item Loader */
+        .skeleton-loader {
+            animation: pulse-bg 1.5s infinite;
+            background: linear-gradient(90deg, #121214 0%, #1a1a1d 50%, #121214 100%);
+            background-size: 200% 100%;
+        }
+        @keyframes pulse-bg { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Lightbox specific styles */
+        #lightbox-modal {
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-lavate-gold selection:text-black">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="text-center relative">
+            <h1 class="text-white font-cinzel text-3xl tracking-[0.5em] mb-6 animate-pulse">LAVATE</h1>
+            <div class="loader-line mx-auto"></div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 transition-opacity duration-300 opacity-0">
+        <!-- Controls -->
+        <button id="lightbox-close" class="absolute top-6 right-6 text-white/50 hover:text-lavate-gold z-50 transition-colors p-4 cursor-pointer pointer-events-auto">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        
+        <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-lavate-gold z-50 p-4 transition-colors hidden md:block cursor-pointer pointer-events-auto">
+            <i class="fas fa-chevron-left text-4xl"></i>
+        </button>
+        
+        <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-lavate-gold z-50 p-4 transition-colors hidden md:block cursor-pointer pointer-events-auto">
+            <i class="fas fa-chevron-right text-4xl"></i>
+        </button>
+
+        <!-- Content Container -->
+        <div class="max-w-6xl w-full mx-auto px-6 flex flex-col items-center justify-center h-full relative">
+            <div id="lightbox-media-container" class="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center">
+                <!-- Media injected here -->
+            </div>
+            
+            <div class="mt-8 text-center max-w-2xl">
+                <span id="lightbox-category" class="text-lavate-gold text-xs font-bold uppercase tracking-[0.2em] block mb-2"></span>
+                <h2 id="lightbox-title" class="text-2xl md:text-4xl font-cinzel text-white mb-2"></h2>
+                <p id="lightbox-client" class="text-gray-500 text-sm italic"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Home Button -->
+    <a href="https://lavatemedia.in/" class="fixed top-8 left-8 z-50 flex items-center gap-3 text-white/50 hover:text-lavate-gold transition-colors duration-300 group hover-trigger">
+        <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-lavate-gold/50 bg-black/20 backdrop-blur-sm transition-all">
+            <i class="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
+        </div>
+        <span class="text-[10px] font-bold uppercase tracking-[0.2em] hidden md:block group-hover:translate-x-1 transition-transform">Back to Home</span>
+    </a>
+
+    <!-- Header Section -->
+    <header class="pt-40 pb-20 px-6 lg:px-12 text-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-lavate-gold/5 rounded-full blur-3xl -z-10 animate-float"></div>
+        <div class="max-w-4xl mx-auto relative z-10">
+            <span class="text-lavate-gold text-xs font-bold tracking-[0.3em] uppercase block mb-4" data-aos="fade-down">Our Portfolio</span>
+            <h1 class="text-4xl md:text-6xl font-cinzel text-white mb-8" data-aos="zoom-in">Selected Works</h1>
+            <p class="text-gray-400 font-light max-w-xl mx-auto text-sm md:text-base">
+                A curation of brands we've elevated through design, strategy, and digital innovation.
+            </p>
+        </div>
+    </header>
+
+    <!-- Filters -->
+    <section class="px-6 lg:px-12 mb-16">
+        <div class="max-w-[1600px] mx-auto flex flex-wrap justify-center gap-4" id="filters">
+            <button class="filter-btn active hover-trigger px-6 py-2 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest text-gray-400 hover:border-lavate-gold hover:text-lavate-gold transition-all" data-filter="all">All</button>
+            <button class="filter-btn hover-trigger px-6 py-2 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest text-gray-400 hover:border-lavate-gold hover:text-lavate-gold transition-all" data-filter="Brand Identity">Branding</button>
+            <button class="filter-btn hover-trigger px-6 py-2 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest text-gray-400 hover:border-lavate-gold hover:text-lavate-gold transition-all" data-filter="Web Development">Web Dev</button>
+            <button class="filter-btn hover-trigger px-6 py-2 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest text-gray-400 hover:border-lavate-gold hover:text-lavate-gold transition-all" data-filter="Growth Strategy">Growth</button>
+            <button class="filter-btn hover-trigger px-6 py-2 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest text-gray-400 hover:border-lavate-gold hover:text-lavate-gold transition-all" data-filter="Content Production">Content</button>
+        </div>
+    </section>
+
+    <!-- Portfolio Grid -->
+    <section class="px-6 lg:px-12 pb-32">
+        <div class="max-w-[1600px] mx-auto">
+            <!-- Loading State -->
+            <div id="loader-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="skeleton-loader h-80 w-full rounded-sm"></div>
+                <div class="skeleton-loader h-80 w-full rounded-sm"></div>
+                <div class="skeleton-loader h-80 w-full rounded-sm"></div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-20">
+                <i class="fas fa-folder-open text-4xl text-gray-600 mb-4"></i>
+                <h3 class="text-xl font-cinzel text-white mb-2">Work in Progress</h3>
+                <p class="text-gray-500 text-sm">No items found in this category.</p>
+            </div>
+
+            <!-- Content Grid -->
+            <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
+                <!-- Items will be injected here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-white/5 py-12 text-center text-gray-600 text-xs uppercase tracking-widest">
+        <p>&copy; 2026 Lavate Media. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                document.getElementById('preloader').style.visibility = 'hidden';
+            }, 800);
+        });
+
+        // Desktop Custom Cursor
+        const isDesktop = window.matchMedia('(min-width: 1024px)');
+        if (isDesktop.matches) {
+            const dot = document.getElementById('cursor-dot');
+            const outline = document.getElementById('cursor-outline');
+            let mouseX = 0, mouseY = 0, outX = 0, outY = 0;
+            window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`; });
+            function animateCursor() {
+                outX += (mouseX - outX) * 0.15; outY += (mouseY - outY) * 0.15;
+                outline.style.transform = `translate(${outX}px, ${outY}px) translate(-50%, -50%)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+
+        // Hover Triggers
+        const addHoverListeners = () => {
+            document.querySelectorAll('.hover-trigger').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+        };
+        addHoverListeners();
+    </script>
+
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDOpLVhrKfszf6pRC7QZ_KCFB3FMDJ19uk",
+            authDomain: "lavate-media.firebaseapp.com",
+            databaseURL: "https://lavate-media-default-rtdb.firebaseio.com",
+            projectId: "lavate-media",
+            storageBucket: "lavate-media.firebasestorage.app",
+            messagingSenderId: "1026315044228",
+            appId: "1:1026315044228:web:ff568f60cf51d59fcd49d1",
+            measurementId: "G-G7FWHM47VN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const grid = document.getElementById('portfolio-grid');
+        const loader = document.getElementById('loader-grid');
+        const emptyState = document.getElementById('empty-state');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        // Lightbox Elements
+        const lightbox = document.getElementById('lightbox-modal');
+        const lightboxMedia = document.getElementById('lightbox-media-container');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        const lightboxCat = document.getElementById('lightbox-category');
+        const lightboxClient = document.getElementById('lightbox-client');
+        const lbClose = document.getElementById('lightbox-close');
+        const lbNext = document.getElementById('lightbox-next');
+        const lbPrev = document.getElementById('lightbox-prev');
+
+        let allItems = [];
+        let currentFilteredItems = [];
+        let currentLightboxIndex = 0;
+
+        // Fetch Data
+        const portfolioRef = ref(db, 'portfolio');
+        
+        onValue(portfolioRef, (snapshot) => {
+            const data = snapshot.val();
+            
+            // Clear Grid & Loader
+            loader.classList.add('hidden');
+            grid.innerHTML = '';
+            
+            if (!data) {
+                // Show Empty State if no data
+                emptyState.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            }
+
+            // Convert object to array
+            allItems = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            
+            // Initial Render (All)
+            currentFilteredItems = allItems;
+            
+            emptyState.classList.add('hidden');
+            grid.classList.remove('hidden');
+            
+            renderItems(allItems);
+        }, (error) => {
+            console.error("Firebase Error:", error);
+            loader.classList.add('hidden');
+            emptyState.innerHTML = '<p class="text-red-500">Error loading data. Please try again later.</p>';
+            emptyState.classList.remove('hidden');
+        });
+
+        // Render Function
+        function renderItems(items) {
+            grid.innerHTML = '';
+            
+            if (items.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+            }
+
+            items.forEach((item, index) => {
+                // Determine Media Type (Image or Video)
+                let mediaElement = '';
+                const isVideo = item.type === 'video' || (item.url && item.url.endsWith('.mp4'));
+                
+                if (isVideo) {
+                    // Grid Video with Controls
+                    mediaElement = `
+                        <video 
+                            src="${item.url}#t=1" 
+                            class="w-full h-80 object-cover cursor-pointer relative z-10" 
+                            controls 
+                            playsinline 
+                            loop
+                            muted
+                            onloadedmetadata="this.currentTime=1"
+                        >
+                            Your browser does not support the video tag.
+                        </video>
+                    `;
+                } else {
+                    // Image
+                    mediaElement = `<img src="${item.url}" alt="${item.title}" class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 cursor-pointer" loading="lazy">`;
+                }
+
+                // Create Card HTML
+                const card = document.createElement('div');
+                card.className = isVideo ? 'group relative overflow-hidden rounded-sm h-80 bg-lavate-dark' : 'hover-trigger group relative h-80 bg-lavate-dark overflow-hidden rounded-sm cursor-none';
+                card.setAttribute('data-aos', 'fade-up');
+                card.setAttribute('data-aos-delay', (index % 3) * 100); 
+
+                // Add click listener to open lightbox
+                const clickHandler = (e) => {
+                    // If interact with controls (VIDEO tag), don't open modal
+                    if(e.target.tagName === 'VIDEO') return; 
+                    openLightbox(index);
+                };
+                card.addEventListener('click', clickHandler);
+
+                card.innerHTML = `
+                    ${mediaElement}
+                    <div class="absolute top-0 left-0 w-full p-6 bg-gradient-to-b from-black/80 via-transparent to-transparent pointer-events-auto cursor-pointer z-20" title="Open in Lightbox">
+                        <span class="text-lavate-gold text-[10px] font-bold uppercase tracking-widest block mb-1">${item.category || 'Portfolio'}</span>
+                        <h3 class="text-xl font-cinzel text-white">${item.title}</h3>
+                    </div>
+                    <!-- View Button Overlay -->
+                    <div class="absolute inset-0 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                         <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center bg-black/50 backdrop-blur pointer-events-auto cursor-pointer hover:bg-lavate-gold hover:text-black transition-colors" title="Expand">
+                            <i class="fas fa-expand text-xs"></i>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            addHoverListeners();
+        }
+
+        // Filter Logic
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filterValue = btn.getAttribute('data-filter');
+                
+                if (filterValue === 'all') {
+                    currentFilteredItems = allItems;
+                } else {
+                    currentFilteredItems = allItems.filter(item => {
+                        return item.category && item.category === filterValue;
+                    });
+                }
+                renderItems(currentFilteredItems);
+            });
+        });
+
+        // --- LIGHTBOX LOGIC ---
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            updateLightboxContent();
+            
+            lightbox.classList.remove('hidden');
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightboxMedia.innerHTML = ''; // Stop video playback
+            }, 300);
+            document.body.style.overflow = '';
+        }
+
+        function updateLightboxContent() {
+            const item = currentFilteredItems[currentLightboxIndex];
+            if (!item) return;
+
+            lightboxTitle.innerText = item.title;
+            lightboxCat.innerText = item.category;
+            lightboxClient.innerText = item.client ? `Client: ${item.client}` : '';
+
+            const isVideo = item.type === 'video' || (item.url && item.url.endsWith('.mp4'));
+            
+            if (isVideo) {
+                lightboxMedia.innerHTML = `
+                    <video 
+                        src="${item.url}" 
+                        class="max-w-full max-h-full object-contain shadow-2xl" 
+                        controls 
+                        autoplay 
+                        playsinline
+                    ></video>
+                `;
+            } else {
+                lightboxMedia.innerHTML = `
+                    <img 
+                        src="${item.url}" 
+                        class="max-w-full max-h-full object-contain shadow-2xl"
+                        alt="${item.title}"
+                    >
+                `;
+            }
+        }
+
+        function nextItem() {
+            currentLightboxIndex = (currentLightboxIndex + 1) % currentFilteredItems.length;
+            updateLightboxContent();
+        }
+
+        function prevItem() {
+            currentLightboxIndex = (currentLightboxIndex - 1 + currentFilteredItems.length) % currentFilteredItems.length;
+            updateLightboxContent();
+        }
+
+        // Lightbox Event Listeners
+        lbClose.addEventListener('click', closeLightbox);
+        lbNext.addEventListener('click', (e) => { e.stopPropagation(); nextItem(); });
+        lbPrev.addEventListener('click', (e) => { e.stopPropagation(); prevItem(); });
+        
+        // Close on background click
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target.closest('#lightbox-media-container')) {
+                // Ideally don't close if clicking media, but allowing for now for easier exit on mobile
+                if (e.target === lightbox) closeLightbox();
+            }
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.classList.contains('hidden')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextItem();
+            if (e.key === 'ArrowLeft') prevItem();
+        });
+
+    </script>
+</body>
+</html>
