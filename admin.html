@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -471,7 +470,7 @@
                                     <div class="flex justify-between items-center mb-1">
                                         <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Media File (Max 100MB)</label>
                                     </div>
-                                    <input type="file" id="pf-file" accept="image/*" class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-xs focus:border-lavate-gold focus:outline-none file:bg-lavate-gold file:text-black file:border-0 file:px-3 file:py-1 file:mr-4 file:rounded-sm file:font-bold file:cursor-pointer">
+                                    <input type="file" id="pf-file" accept="image/*" class="w-full bg-lavate-black border border-white/10 rounded-sm py-2 px-4 text-white text-xs focus:border-lavate-gold focus:outline-none file:bg-lavate-gold file:text-black file:border-0 file:px-3 file:py-1 file:mr-4 file:rounded-sm file:font-bold file:cursor-pointer" onclick="updateFileTypeAccept()">
                                     <input type="hidden" id="pf-url">
                                     
                                     <!-- Progress Tracker UI -->
@@ -570,7 +569,7 @@
         const tabs = { overview: document.getElementById('tab-overview'), inbox: document.getElementById('tab-inbox'), portfolio: document.getElementById('tab-portfolio') };
 
         // --- MEDIA CONFIG ---
-        const M_TOKEN = "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";
+        const M_TOKEN = "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";
         const M_LIB = "devhimangshu/Lavate-Media";
 
         window.updateFileTypeAccept = function() {
@@ -632,7 +631,7 @@
                         xhr.onload = () => {
                             if (xhr.status >= 200 && xhr.status < 300) {
                                 progressContainer.classList.add('hidden');
-                                resolve(`http://lavatemedia.in/assets/${fileName}`);
+                                resolve(`https://lavatemedia.in/assets/${fileName}`);
                             } else {
                                 const response = JSON.parse(xhr.responseText);
                                 reject(response.message || 'Sync failed');
@@ -940,6 +939,19 @@
             if (file && file.size > 100 * 1024 * 1024) {
                 showToast('File exceeds 100MB limit', 'error');
                 return;
+            }
+
+            // New Validation Logic
+            const currentType = document.getElementById('pf-type').value;
+            if (file) {
+                if (currentType === 'image' && !file.type.startsWith('image/')) {
+                    showToast('Please select an image file', 'error');
+                    return;
+                }
+                if (currentType === 'video' && !file.type.startsWith('video/')) {
+                    showToast('Please select a video file', 'error');
+                    return;
+                }
             }
 
             btn.disabled = true;
